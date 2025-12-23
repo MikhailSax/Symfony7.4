@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 class LuckyController extends AbstractController
@@ -15,5 +16,11 @@ class LuckyController extends AbstractController
         return $this->render('lucky/number.html.twig', [
             'number' => $number,
         ]);
+    }
+
+    #[Route('/lucky/json', name: 'lucky_json', methods: ['GET'])]
+    public function show(): JsonResponse
+    {
+        return $this->json(['name' => 'misha']);
     }
 }
