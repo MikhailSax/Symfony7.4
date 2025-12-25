@@ -11,8 +11,9 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UserController extends AbstractController
 {
     #[Route('/user', name: 'app_user')]
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
+        $users = $entityManager->getRepository(User::class)->findAll();
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
         ]);

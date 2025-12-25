@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+    {{ form_start (form, {'action': path('post_create'),'method' : 'POST'}) }}
+{#    <div class="my-custom-class-for-errors">#}
+{#        {{ form_errors(form) }}#}
+{#    </div>#}
+        <div class="mb-3">
+          {{ form_row(form.name)}}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.description) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.user_id) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.save) }}
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

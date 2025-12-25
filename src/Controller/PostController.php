@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Form\PostType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class PostController extends AbstractController
@@ -23,27 +24,31 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/post/create', name: 'post_create', methods: ['GET'])]
-    public function create(EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
+    #[Route('/post/create', name: 'post_create', methods: ['GET', 'POST'])]
+    public function create(EntityManagerInterface $entityManager, Request $request): Response
     {
         $post = new Post();
-        $post->setName('Как правильно заказывать Календари');
-        $post->setDescription('Календари заказываются лучше чем что то другое итд');
-        $post->setUserId($this->getUser());
-        $post->setCreatedAt(new \DateTimeImmutable());
-        $post->setUpdatedAt(new \DateTimeImmutable());
-        //Проверка объекта Поста
-        $errors = $validator->validate($post);
+        $form = $this->createForm(PostType::class, $post, [
+            'action' => $this->generateUrl('post_create'),
+            'method' => 'POST'
+        ]);
 
-        if (count($errors) > 0) {
-            return new Response((string)$errors, 400);
-        } else {
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $post->setCreatedAt(new \DateTimeImmutable());
+            $post->setUpdatedAt(new \DateTimeImmutable());
+
+            $post = $form->getData();
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return new Response('Saved new post with id' . $post->getId());
+            return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
         }
-
+        return $this->render('post/create.html.twig', [
+            'form' => $form,
+        ]);
     }
 
     #[Route('post/{id}', name: 'post_show', methods: ['GET'])]
@@ -57,15 +62,16 @@ class PostController extends AbstractController
             );
         }
 
-        return new Response('Пост с id: ' . $post->getId() . ' Название поста: '. $post->getName());
+        return new Response('Пост с id: ' . $post->getId() . '\n' . ' Название поста: ' . $post->getName());
     }
+
     #[Route('post/delete/{id}', name: 'post_delete', methods: ['GET'])]
     public function delete(EntityManagerInterface $entityManager, int $id): Response
     {
         $product = $entityManager->getRepository(Post::class)->find($id);
 
         if (!$product) {
-            throw $this->createNotFoundException('Пост с id для удаления не найден '.$product->getId());
+            throw $this->createNotFoundException('Пост с id для удаления не найден ' . $product->getId());
         } else {
             $entityManager->remove($product);
             $entityManager->flush();

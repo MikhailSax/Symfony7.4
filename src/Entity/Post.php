@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -15,15 +16,20 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min:5,max:50,minMessage: 'Минимальное название поста должно быть болье 20 букв!',maxMessage: 'Минимальное название поста должно быть болье 50 букв!')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
