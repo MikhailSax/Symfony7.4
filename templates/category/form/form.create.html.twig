@@ -1,0 +1,30 @@
+{{ form_start(form) }}
+<div class="error-form">
+    {{ form_errors(form) }}
+</div>
+<div>
+    <div class="mb-3">
+        {{ form_label(form.title, 'Название Категории', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.title, {'attr' : {'class': 'form-control','placeholder':'Полиграфия'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.slug, 'Ссылка на Категорию', {'label_attr': {'class': 'form-label'}})}}
+        {{ form_widget(form.slug, {'attr':{class: 'form-control','placeholder': 'Polygrafiya'}})}}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.short_desc ,'Короткое описание', {'label_attr':{'class': 'form-label'}})}}
+        {{ form_widget(form.short_desc, {'attr':{class: 'form-control','placeholder': 'Полиграфия...'}})}}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.description ,'Описание', {'label_attr':{'class': 'form-label'}})}}
+        {{ form_widget(form.description, {'attr':{class: 'form-control','placeholder': 'Полиграфия специализируется...',rows:'3',cols : '50'}})}}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.parent ,'Родительская Категория', {'label_attr':{'class': 'form-label'}})}}
+        {{ form_widget(form.parent, {'attr':{class: 'form-select'}})}}
+    </div>
+    <div class="mb-3">
+        {{ form_widget(form.submit, {'attr':{class: 'btn btn-primary'},'label':'Сохранить'})}}
+    </div>
+</div>
+{{ form_end(form) }}

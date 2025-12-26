@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +16,7 @@ class Category
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255,unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
@@ -26,14 +28,24 @@ class Category
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $short_desc = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $parent_id = null;
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    private ?self $parent = null;
+
+
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
+    private Collection $children;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
+
+    public function __construct()
+    {
+        $this->children = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -123,4 +135,46 @@ class Category
 
         return $this;
     }
+
+    public function getChildren(): Collection
+    {
+        return $this->children;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): static
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    public function setChildren(self $children): static
+    {
+        if (!$this->children->contains($children)) {
+            $this->children->add($children);
+            $children->setParent($this);
+        }
+        return $this;
+    }
+
+    public function removeChildren(self $children): static
+    {
+        if ($this->children->removeElement($children)) {
+            if ($children->getParent() === $this) {
+                $children->setParent(null);
+            }
+        }
+        return $this;
+
+    }
+
+    public function __toString(): string
+    {
+        return $this->getTitle();
+    }
+
 }
