@@ -1,10 +1,18 @@
-<nav class="navigation">
-    <ul class="navigation_list">
-        <li class="navigation_list-item">
-            <a href="{{ path ('category_index') }}"> Категории </a>
+<nav class="d-flex flex-column flex-shrink-0 p-3 bg-light border-end" aria-label="Административная навигация" style="width: 280px;">
+    <a href="{{ path('category_index') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+        <span class="fs-5 fw-semibold">Админ-панель</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="{{ path('category_index') }}" class="nav-link active" aria-current="page">
+                Категории
+            </a>
         </li>
-        <li class="navigation_list-item">
-            <a href="{{ path ('category_create') }}"> Создать Категорию</a>
+        <li>
+            <a href="{{ path('category_create') }}" class="nav-link link-dark">
+                Создать категорию
+            </a>
         </li>
     </ul>
 </nav>
