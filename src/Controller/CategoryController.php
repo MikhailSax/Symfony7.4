@@ -16,9 +16,12 @@ final class CategoryController extends AbstractController
     #[Route(name: 'index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
+       $title = 'Список Категорий';
+       $category = $entityManager->getRepository(Category::class)->findAll();
 
         return $this->render('category/index.html.twig', [
             'controller_name' => 'CategoryController',
+            'title' => $title,
         ]);
     }
 

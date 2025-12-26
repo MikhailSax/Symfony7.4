@@ -17,7 +17,7 @@ class PostController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         $posts = $entityManager->getRepository(Post::class)->findAll();
-        dd($posts);
+
         return $this->render('post/index.html.twig', [
             'name' => 'post',
             'desc' => 'asd'
