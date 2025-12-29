@@ -1,0 +1,52 @@
+{{ form_start(form) }}
+<div>
+    <div class="mb-3 form-item">
+        {{ form_label(form.title, 'Название Категории', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.title, {'attr' : {'class': 'form-control','placeholder':'Полиграфия'}}) }}
+        {% if form_errors(form.title) %}
+            <div class="alert alert-danger mt-3" role="alert">
+                {{ form_errors(form.title) }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="mb-3 form-item">
+        {{ form_label(form.slug, 'Ссылка на Категорию', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.slug, {'attr':{class: 'form-control','placeholder': 'Polygrafiya'}}) }}
+        {% if form_errors(form.slug) %}
+            <div class="alert alert-danger mt-3" role="alert">
+                <span>{{ form_errors(form.slug) }}</span>
+            </div>
+        {% endif %}
+    </div>
+    <div class="mb-3 form-item">
+        {{ form_label(form.short_desc ,'Короткое описание', {'label_attr':{'class': 'form-label'}}) }}
+        {{ form_widget(form.short_desc, {'attr':{class: 'form-control','placeholder': 'Полиграфия...'}}) }}
+        {% if form_errors(form.short_desc) %}
+            <div class="alert alert-danger mt-3" role="alert">
+                <span>{{ form_errors(form.short_desc) }}</span>
+            </div>
+        {% endif %}
+    </div>
+    <div class="mb-3 form-item">
+        {{ form_label(form.description ,'Описание', {'label_attr':{'class': 'form-label'}}) }}
+        {{ form_widget(form.description, {'attr':{class: 'form-control','placeholder': 'Полиграфия специализируется...',rows:'3',cols : '50'}}) }}
+        {% if form_errors(form.description) %}
+            <div class="alert alert-danger mt-3" role="alert">
+                <span>{{ form_errors(form.description) }}</span>
+            </div>
+        {% endif %}
+    </div>
+    <div class="mb-3 form-item">
+        {{ form_label(form.parent ,'Родительская Категория', {'label_attr':{'class': 'form-label'}}) }}
+        {{ form_widget(form.parent, {'attr':{class: 'form-select'}}) }}
+        {% if form_errors(form.parent) %}
+            <div class="alert alert-danger mt-3" role="alert">
+                <span>{{ form_errors(form.parent) }}</span>
+            </div>
+        {% endif %}
+    </div>
+    <div class="mb-3 form-item">
+        {{ form_widget(form.submit, {'attr':{class: 'btn btn-primary'},'label':'Сохранить'}) }}
+    </div>
+</div>
+{{ form_end(form) }}

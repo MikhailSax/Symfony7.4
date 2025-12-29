@@ -1,18 +1,39 @@
-<nav class="d-flex flex-column flex-shrink-0 p-3 bg-light border-end" aria-label="Административная навигация" style="width: 280px;">
-    <a href="{{ path('category_index') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
-        <span class="fs-5 fw-semibold">Админ-панель</span>
-    </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="{{ path('category_index') }}" class="nav-link active" aria-current="page">
+{% set route = app.request.attributes.get('_route') %}
+
+<div class="d-flex flex-column h-100">
+    <div class="p-3">
+        <a href="{{ path('category_index') }}" class="d-flex align-items-center gap-2 text-decoration-none">
+      <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-danger text-white"
+            style="width: 28px; height: 28px; font-size: 14px;">
+        D
+      </span>
+            <span class="fw-semibold text-dark">Админ-панель</span>
+        </a>
+
+        <hr class="my-3">
+
+        <div class="small text-uppercase text-muted fw-semibold mb-2">Каталог</div>
+
+        <div class="list-group list-group-flush">
+            <a href="{{ path('category_index') }}"
+               class="list-group-item list-group-item-action {{ route == 'category_index' ? 'active' : '' }}">
                 Категории
             </a>
-        </li>
-        <li>
-            <a href="{{ path('category_create') }}" class="nav-link link-dark">
+
+            <a href="{{ path('category_create') }}"
+               class="list-group-item list-group-item-action {{ route == 'category_create' ? 'active' : '' }}">
                 Создать категорию
             </a>
-        </li>
-    </ul>
-</nav>
+
+            <a href="{{ path('properties_index') }}"
+               class="list-group-item list-group-item-action {{ route == 'properties_index' ? 'active' : '' }}">
+                Характеристики
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-auto p-3 border-top">
+        <a href="/" class="btn btn-outline-secondary w-100">На сайт</a>
+    </div>
+</div>
+

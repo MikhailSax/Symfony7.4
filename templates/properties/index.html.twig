@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
-{% set route = app.request.attributes.get('_route') %}
-{% block title %}{{ title }}{% endblock %}
+
+{% block title %}Hello PropertiesController!{% endblock %}
 
 {% block body %}
     <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between mb-3">
         <div>
-            <h1 class="h3 mb-0">Список категорий</h1>
-            <div class="text-muted small">Управление категориями каталога</div>
+            <h1 class="h3 mb-0">Список характеристик</h1>
+            <div class="text-muted small">Управление характеристиками</div>
         </div>
         {% if errorMessage is defined %}
             <div class="alert alert-danger" role="alert">
@@ -16,7 +16,7 @@
             </div>
         {% endif %}
         <div class="d-flex gap-2">
-            <a href="{{ path('category_create') }}" class="btn btn-primary">
+            <a href="{{ path('properties_create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-lg me-1"></i>
                 Добавить
             </a>
@@ -31,41 +31,22 @@
                     <tr>
                         <th style="width: 80px;">ID</th>
                         <th>Название</th>
-                        <th>Slug</th>
-                        <th>Коротко</th>
-                        <th>Родитель</th>
                         <th class="text-end" style="width: 120px;">Действия</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    {% for category in categories %}
+                    {% for property in properties %}
                         <tr>
-                            <td class="text-muted">{{ category.id }}</td>
+                            <td class="text-muted">{{ property.id }}</td>
 
                             <td class="fw-semibold">
-                                <a href="{{ path('category_edit',{slug: category.slug }) }}">{{ category.title }}</a>
-                            </td>
-
-                            <td>
-                                <span class="badge text-bg-light border">{{ category.slug }}</span>
-                            </td>
-
-                            <td class="text-muted">
-                                {{ category.shortDesc }}
-                            </td>
-
-                            <td>
-                                {% if category.parent %}
-                                    <span class="text-muted">{{ category.parent.title }}</span>
-                                {% else %}
-                                    <span class="text-muted">—</span>
-                                {% endif %}
+                                <a href="{{ path('properties_edit',{id: property.id }) }}">{{ property.name }}</a>
                             </td>
 
                             <td class="text-end">
                                 <div class="btn-group" role="group" aria-label="Действия">
-                                    <a href="{{ path('category_edit', {slug: category.slug}) }}"
+                                    <a href="{{ path('properties_edit', {id: property.id}) }}"
                                        class="btn btn-sm btn-outline-primary"
                                        title="Редактировать"
                                        aria-label="Редактировать">
@@ -73,12 +54,12 @@
                                     </a>
 
                                     <form method="post"
-                                          action="{{ path('category_delete', {slug: category.slug}) }}"
+                                          action="{{ path('properties_delete', {id: property.id}) }}"
                                           class="d-inline"
                                           data-controller="category"
-                                          onsubmit="return confirm('Удалить категорию «{{ category.title }}»?');">
+                                          onsubmit="return confirm('Удалить категорию «{{ property.name }}»?');">
                                         <input type="hidden" name="_token"
-                                               value="{{ csrf_token('delete' ~ category.slug) }}">
+                                               value="{{ csrf_token('delete' ~ property.id) }}">
                                         <button class="btn btn-sm btn-outline-danger"
                                                 title="Удалить"
                                                 aria-label="Удалить"
@@ -93,7 +74,7 @@
                     {% else %}
                         <tr>
                             <td colspan="6" class="text-center text-muted py-4">
-                                Категорий пока нет
+                                Характеристик пока нет
                             </td>
                         </tr>
                     {% endfor %}
@@ -102,5 +83,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

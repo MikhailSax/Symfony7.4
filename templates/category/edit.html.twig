@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="category-create">
+        <h2 class="category-create_title">{{ title }}</h2>
+    </div>
+    {{ include ('category/form/edit.html.twig') }}
+{% endblock %}

@@ -1,0 +1,16 @@
+{{ form_start(form) }}
+<div class="form-container">
+    <div class="mb-3 form-item">
+        {{ form_label(form.name, 'Название Категории', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.name, {'attr' : {'class': 'form-control','placeholder':'Цвет'}}) }}
+        {% if form_errors(form.name) %}
+            <div class="alert alert-danger mt-3" role="alert">
+                {{ form_errors(form.name) }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="mb-3 form-item">
+        {{ form_widget(form.submit, {'attr':{class: 'btn btn-primary'},'label':'Сохранить'}) }}
+    </div>
+</div>
+{{ form_end(form) }}
