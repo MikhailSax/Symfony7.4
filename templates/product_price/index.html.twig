@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ProductPrice index{% endblock %}
+
+{% block body %}
+    <h1>ProductPrice index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Created_at</th>
+                <th>Updated_at</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product_price in product_prices %}
+            <tr>
+                <td>{{ product_price.id }}</td>
+                <td>{{ product_price.name }}</td>
+                <td>{{ product_price.quantity }}</td>
+                <td>{{ product_price.price }}</td>
+                <td>{{ product_price.createdAt ? product_price.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ product_price.updatedAt ? product_price.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_product_price_show', {'id': product_price.id}) }}">show</a>
+                    <a href="{{ path('app_product_price_edit', {'id': product_price.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_product_price_new') }}">Create new</a>
+{% endblock %}

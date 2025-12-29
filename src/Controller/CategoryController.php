@@ -31,13 +31,6 @@ final class CategoryController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $category = new Category();
-        $fileSystem = new Filesystem();
-
-//        $publicDir = dirname(__DIR__) . '\public\category';
-//
-//        $publicDir .= $category->getSlug() . DIRECTORY_SEPARATOR;
-//
-//        dd($publicDir);
 
         $form = $this->createForm(CategoryFormType::class, $category);
         $form->handleRequest($request);
@@ -60,8 +53,8 @@ final class CategoryController extends AbstractController
     {
         $title = 'Редактирование категории ';
         $category = $entityManager->getRepository(Category::class)->findOneBy(['slug' => $slug]);
-        $form = $this->createForm(CategoryFormType::class, $category);
         $title .= $category->getTitle();
+        $form = $this->createForm(CategoryFormType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

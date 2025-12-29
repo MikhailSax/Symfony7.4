@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ProductPrice{% endblock %}
+
+{% block body %}
+    <h1>ProductPrice</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ product_price.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ product_price.name }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ product_price.quantity }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ product_price.price }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ product_price.createdAt ? product_price.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ product_price.updatedAt ? product_price.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_product_price_index') }}">back to list</a>
+
+    <a href="{{ path('app_product_price_edit', {'id': product_price.id}) }}">edit</a>
+
+    {{ include('product_price/_delete_form.html.twig') }}
+{% endblock %}

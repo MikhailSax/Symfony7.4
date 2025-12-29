@@ -22,7 +22,7 @@ class Category
     private ?string $title = null;
 
     #[Assert\NotBlank]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,unique: true)]
     private ?string $slug = null;
 
     #[Assert\NotBlank]
@@ -60,6 +60,9 @@ class Category
      */
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category_id')]
     private Collection $products;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $is_active = null;
 
     public function __construct()
     {
@@ -254,6 +257,18 @@ class Category
                 $product->setCategoryId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(?bool $is_active): static
+    {
+        $this->is_active = $is_active;
 
         return $this;
     }

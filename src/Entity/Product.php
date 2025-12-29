@@ -17,18 +17,25 @@ class Product
     private ?int $id = null;
 
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 30, max: 1000)]
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 10, max: 255)]
     #[ORM\Column(length: 255)]
     private ?string $short_description = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[Assert\NotBlank]
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $category_id = null;
 
@@ -55,6 +62,9 @@ class Product
      */
     #[ORM\OneToMany(targetEntity: ProductPrice::class, mappedBy: 'product_id')]
     private Collection $productPrices;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $is_active = null;
 
     public function __construct()
     {
@@ -238,6 +248,18 @@ class Product
                 $productPrice->setProductId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(?bool $is_active): static
+    {
+        $this->is_active = $is_active;
 
         return $this;
     }
