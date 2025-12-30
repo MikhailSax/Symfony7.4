@@ -58,7 +58,7 @@ final class PropertiesController extends AbstractController
             return $this->redirectToRoute('properties_index');
         }
 
-        return $this->render('properties/edit.html.twig', [
+        return $this->render('properties/create.html.twig', [
             'form' => $form,
             'property' => $property
         ]);

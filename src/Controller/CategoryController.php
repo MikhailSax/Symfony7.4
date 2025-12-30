@@ -31,7 +31,6 @@ final class CategoryController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $category = new Category();
-
         $form = $this->createForm(CategoryFormType::class, $category);
         $form->handleRequest($request);
 
@@ -65,7 +64,7 @@ final class CategoryController extends AbstractController
 
             return $this->redirectToRoute('category_index');
         }
-        return $this->render('category/edit.html.twig', [
+        return $this->render('category/create.html.twig', [
             'form' => $form,
             'title' => $title,
             'category' => $category,

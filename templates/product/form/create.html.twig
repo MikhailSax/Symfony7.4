@@ -1,6 +1,5 @@
-{{ form_start(form) }}
 <div>
-    <div class="mb-3 form-item">
+    <div class="mb-3 mt-3 form-item">
         {{ form_label(form.title, 'Название Продукта', {'label_attr': {'class': 'form-label'}}) }}
         {{ form_widget(form.title, {'attr' : {'class': 'form-control','placeholder':'Календарь-стандарт'}}) }}
         {% if form_errors(form.title) %}
@@ -45,8 +44,28 @@
             </div>
         {% endif %}
     </div>
+
     <div class="mb-3 form-item">
-        {{ form_widget(form.submit, {'attr':{class: 'btn btn-primary'},'label':'Создать'}) }}
+        <div class="form-check form-switch">
+            {{ form_widget(form.is_active,{'attr':{'class': 'form-check-input', 'id': 'flexSwitchCheckDefault'}}) }}
+            {{ form_label(form.is_active,'Активен?',{'label_attr' : {'class':'form-check-label'}}) }}
+        </div>
+    </div>
+    <div class="mb-3 form-item">
+        <div class="d-flex gap-2">
+            <div>
+                {{ form_widget(form.submit, {'attr':{class: 'btn btn-primary'},'label':'Создать'}) }}
+            </div>
+            <div>
+                {% if product.id %}
+                <form method="post" action="{{ path('product_delete', {'id': product.id}) }}" onsubmit="return confirm('Вы дейстивительно хотите удалить этот продукт?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                    <button class="btn btn-danger">Удалить</button>
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
     </div>
 </div>
-{{ form_end(form) }}
+

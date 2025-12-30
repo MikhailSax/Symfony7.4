@@ -4,10 +4,31 @@
 
 {% block body %}
     <h1>Редактирование Продукта</h1>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general-form"
+                    type="button" role="tab" aria-controls="general" aria-selected="true">Основное
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="price-tab" data-bs-toggle="tab" data-bs-target="#price" type="button"
+                    role="tab" aria-controls="price" aria-selected="false">Характеристики
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="properties-tab" data-bs-toggle="tab" data-bs-target="#properties" type="button"
+                    role="tab" aria-controls="contact" aria-selected="false">Цены
+            </button>
+        </li>
+    </ul>
 
-    {{ include('product/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('product_index') }}">back to list</a>
-
-    {{ include('product/_delete_form.html.twig') }}
+    {{ form_start(form) }}
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="general-form" role="tabpanel" aria-labelledby="home-tab">
+            {{ include('product/form/create.html.twig') }}
+        </div>
+        <div class="tab-pane fade" id="price" role="tabpanel" aria-labelledby="profile-tab"></div>
+        <div class="tab-pane fade" id="properties" role="tabpanel" aria-labelledby="contact-tab">{{ include('product/modal/create.price.html.twig') }}</div>
+    </div>
+    {{ form_end(form) }}
 {% endblock %}

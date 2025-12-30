@@ -5,5 +5,10 @@
 {% block body %}
     <h1>Создать новый продукт</h1>
 
-    {{ include('product/form/edit.html.twig') }}
+    {{ form_start(form) }}
+
+    {{ include('product/form/create.html.twig') }}
+    {{ form_end(form) }}
+
+
 {% endblock %}

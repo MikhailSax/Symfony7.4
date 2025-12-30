@@ -46,6 +46,12 @@
         {% endif %}
     </div>
     <div class="mb-3 form-item">
+        <div class="form-check form-switch">
+            {{ form_widget(form.is_active,{'attr':{'class': 'form-check-input', 'id': 'flexSwitchCheckDefault'}}) }}
+            {{ form_label(form.is_active,'Активна категория?',{'label_attr' : {'class':'form-check-label'}}) }}
+        </div>
+    </div>
+    <div class="mb-3 form-item">
         {{ form_widget(form.submit, {'attr':{class: 'btn btn-primary'},'label':'Сохранить'}) }}
     </div>
 </div>

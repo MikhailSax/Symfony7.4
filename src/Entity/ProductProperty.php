@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ProductPropertyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductPropertyRepository::class)]
 class ProductProperty
@@ -13,17 +14,21 @@ class ProductProperty
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
     #[ORM\ManyToOne(inversedBy: 'productProperties')]
     private ?Product $product_id = null;
 
+    #[Assert\NotBlank]
     #[ORM\ManyToOne(inversedBy: 'productProperties')]
     private ?Properties $property_id = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $value = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
+
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;

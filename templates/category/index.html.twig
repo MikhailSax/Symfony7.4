@@ -31,8 +31,8 @@
                     <tr>
                         <th style="width: 80px;">ID</th>
                         <th>Название</th>
-                        <th>Slug</th>
-                        <th>Коротко</th>
+                        <th>url</th>
+                        <th>Короткое описание</th>
                         <th>Родитель</th>
                         <th class="text-end" style="width: 120px;">Действия</th>
                     </tr>
@@ -52,7 +52,7 @@
                             </td>
 
                             <td class="text-muted">
-                                {{ category.shortDesc }}
+                                <span>{{ category.shortDesc|slice(0,10)}}...</span>
                             </td>
 
                             <td>
