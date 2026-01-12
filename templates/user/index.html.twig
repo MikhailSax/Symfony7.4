@@ -1,20 +1,89 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Hello UserController!{% endblock %}
+{% extends 'admin.html.twig' %}
+{% set route = app.request.attributes.get('_route') %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between mb-3">
+        <div>
+            <h1 class="h3 mb-0">Список Пользователей</h1>
+            <div class="text-muted small">Управление пользователями</div>
+        </div>
+        {% if errorMessage is defined %}
+            <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert">
+                    {{ errorMessage }}
+                </div>
+            </div>
+        {% endif %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/mv/Desktop/admin/symfony/src/Controller/UserController.php</code></li>
-        <li>Your template at <code>C:/Users/mv/Desktop/admin/symfony/templates/user/index.html.twig</code></li>
-    </ul>
-</div>
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th>Имя</th>
+                        <th>Фамилия</th>
+                        <th class="text-end" style="width: 120px;">Действия</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td class="text-muted">{{ user.id }}</td>
+
+                            <td class="fw-semibold">
+                                <a href="">{{ user.name }}</a>
+                            </td>
+
+                            <td>
+                                <span class="badge text-bg-light border">{{ user.lastName }}</span>
+                            </td>
+
+
+
+                            <td class="text-end">
+                                <div class="btn-group" role="group" aria-label="Действия">
+                                    <a href=""
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="Редактировать"
+                                       aria-label="Редактировать">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    <form method="post"
+                                          action=""
+                                          class="d-inline"
+                                          data-controller="category"
+                                          onsubmit="return confirm('Удалить Пользователя «{{ user.name }}»?');">
+                                        <input type="hidden" name="_token"
+                                               value="{{ csrf_token('delete' ~ user.id) }}">
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                title="Удалить"
+                                                aria-label="Удалить"
+                                                data-action="click->category#greet"
+                                        >
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                Пользователей пока нет
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

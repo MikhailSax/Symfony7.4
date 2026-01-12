@@ -1,0 +1,330 @@
+// assets/styles/registration.scss
+
+.registration-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+    padding: 20px;
+
+    .registration-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 500px;
+        border: 1px solid #f0f0f0;
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+
+            .logo-icon {
+                width: 70px;
+                height: 70px;
+                background: linear-gradient(45deg, #dc3545, #ff6b6b);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 15px;
+                color: white;
+                font-size: 30px;
+            }
+        }
+
+        .form-title {
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+
+            .form-control {
+                border: 2px solid #e9ecef;
+                border-radius: 10px;
+                padding: 14px 20px;
+                font-size: 16px;
+                transition: all 0.3s;
+
+                &:focus {
+                    border-color: #dc3545;
+                    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+                }
+
+                &.is-invalid {
+                    border-color: #dc3545;
+                }
+            }
+
+            .form-floating {
+                > .form-control {
+                    height: calc(3.5rem + 4px);
+                    padding: 1rem 0.75rem;
+                }
+
+                > label {
+                    padding: 1rem 0.75rem;
+                }
+            }
+
+            .input-group {
+                .input-group-text {
+                    background-color: #f8f9fa;
+                    border: 2px solid #e9ecef;
+                    border-right: none;
+                    color: #6c757d;
+                }
+
+                .form-control {
+                    border-left: none;
+
+                    &:focus {
+                        border-color: #e9ecef;
+                        box-shadow: none;
+
+                        & + .input-group-text {
+                            border-color: #dc3545;
+                        }
+                    }
+                }
+            }
+
+            .toggle-password {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                color: #6c757d;
+                cursor: pointer;
+                z-index: 10;
+                padding: 5px;
+
+                &:hover {
+                    color: #333;
+                }
+            }
+
+            .password-strength {
+                height: 5px;
+                background: #e9ecef;
+                border-radius: 3px;
+                margin-top: 5px;
+                overflow: hidden;
+
+                .strength-bar {
+                    height: 100%;
+                    width: 0%;
+                    transition: width 0.3s, background-color 0.3s;
+                    border-radius: 3px;
+
+                    &.strength-weak {
+                        width: 33%;
+                        background-color: #dc3545;
+                    }
+
+                    &.strength-medium {
+                        width: 66%;
+                        background-color: #ffc107;
+                    }
+
+                    &.strength-strong {
+                        width: 100%;
+                        background-color: #28a745;
+                    }
+                }
+            }
+
+            .password-requirements {
+                font-size: 13px;
+                color: #6c757d;
+                margin-top: 5px;
+
+                .requirement {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 3px;
+
+                    i {
+                        font-size: 12px;
+                        margin-right: 5px;
+                    }
+
+                    &.met {
+                        color: #28a745;
+
+                        i {
+                            color: #28a745;
+                        }
+                    }
+                }
+            }
+
+            .form-check-input {
+                &:checked {
+                    background-color: #dc3545;
+                    border-color: #dc3545;
+                }
+
+                &:focus {
+                    border-color: #dc3545;
+                    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+                }
+            }
+
+            .form-check-label {
+                color: #495057;
+                font-size: 14px;
+            }
+
+            .invalid-feedback {
+                display: none;
+                font-size: 13px;
+                margin-top: 5px;
+
+                &.show {
+                    display: block;
+                }
+            }
+        }
+
+        .btn-register {
+            background: linear-gradient(45deg, #dc3545, #ff6b6b);
+            border: none;
+            color: white;
+            padding: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            width: 100%;
+            transition: all 0.3s;
+            font-size: 16px;
+            margin-top: 10px;
+
+            &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 7px 14px rgba(220, 53, 69, 0.2);
+            }
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: #6c757d;
+            font-size: 14px;
+
+            &::before,
+            &::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+            span {
+                padding: 0 15px;
+            }
+        }
+
+        .social-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+
+            .btn-social {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 12px;
+                border-radius: 10px;
+                font-weight: 500;
+                transition: all 0.3s;
+                border: 2px solid transparent;
+
+                i {
+                    margin-right: 8px;
+                    font-size: 18px;
+                }
+
+                &.btn-yandex {
+                    background-color: #FFCC00;
+                    color: #000;
+
+                    &:hover {
+                        background-color: #e6b800;
+                        border-color: #e6b800;
+                    }
+                }
+
+                &.btn-vk {
+                    background-color: #4C75A3;
+                    color: white;
+
+                    &:hover {
+                        background-color: #3b5c87;
+                        border-color: #3b5c87;
+                    }
+                }
+
+                &.btn-mail {
+                    background-color: #168DE2;
+                    color: white;
+
+                    &:hover {
+                        background-color: #1379c6;
+                        border-color: #1379c6;
+                    }
+                }
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                }
+            }
+        }
+
+        .login-link {
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+
+            a {
+                color: #dc3545;
+                text-decoration: none;
+                font-weight: 600;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+// Адаптивность
+@media (max-width: 576px) {
+    .registration-container {
+        padding: 10px;
+
+        .registration-card {
+            padding: 30px 20px;
+
+            .social-buttons {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    }
+}

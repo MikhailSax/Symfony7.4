@@ -2,31 +2,42 @@
 
 <div class="d-flex flex-column h-100">
     <div class="p-3">
-        <a href="{{ path('category_index') }}" class="d-flex align-items-center gap-2 text-decoration-none">
-      <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-danger text-white"
+        <a href="{{ path('admin') }}" class="d-flex align-items-center gap-2 text-decoration-none">
+      <div class="d-inline-flex align-items-center justify-content-center rounded-circle  text-white"
             style="width: 28px; height: 28px; font-size: 14px;">
-        D
-      </span>
+        <img src="{{ asset('images/logo.png') }}" alt="Логотип" width="120px" height="80px"/>
+      </div>
             <span class="fw-semibold text-dark">Админ-панель</span>
         </a>
 
         <hr class="my-3">
+        <div class="small text-uppercase text-muted fw-semibold mb-2">Пользователи</div>
+        <div class="list-group list-group-flush">
+            <a href="{{ path('admin_users_index') }}"
+               class="list-group-item list-group-item-action {{ route == 'admin_users_index' ? 'active' : '' }}">
+                Пользователи
+            </a>
+            <a href=""
+               class="list-group-item list-group-item-action ">
+                Заказы
+            </a>
+        </div>
 
         <div class="small text-uppercase text-muted fw-semibold mb-2">Каталог</div>
 
         <div class="list-group list-group-flush">
-            <a href="{{ path('category_index') }}"
-               class="list-group-item list-group-item-action {{ route == 'category_index' ? 'active' : '' }}">
+            <a href="{{ path('admin_category_index') }}"
+               class="list-group-item list-group-item-action {{ route == 'admin_category_index' ? 'active' : '' }}">
                 Категории
             </a>
 
-            <a href="{{ path('product_index') }}"
-               class="list-group-item list-group-item-action {{ route == 'product_index' ? 'active' : '' }}">
+            <a href="{{ path('admin_product_index') }}"
+               class="list-group-item list-group-item-action {{ route == 'admin_product_index' ? 'active' : '' }}">
                 Продукция
             </a>
 
-            <a href="{{ path('properties_index') }}"
-               class="list-group-item list-group-item-action {{ route == 'properties_index' ? 'active' : '' }}">
+            <a href="{{ path('admin_properties_index') }}"
+               class="list-group-item list-group-item-action {{ route == 'admin_properties_index' ? 'active' : '' }}">
                 Характеристики
             </a>
         </div>

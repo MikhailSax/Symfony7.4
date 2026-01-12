@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin.html.twig' %}
 
 {% block title %}Hello PropertiesController!{% endblock %}
 
@@ -16,7 +16,7 @@
             </div>
         {% endif %}
         <div class="d-flex gap-2">
-            <a href="{{ path('properties_create') }}" class="btn btn-primary">
+            <a href="{{ path('admin_properties_create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-lg me-1"></i>
                 Добавить
             </a>
@@ -41,12 +41,12 @@
                             <td class="text-muted">{{ property.id }}</td>
 
                             <td class="fw-semibold">
-                                <a href="{{ path('properties_edit',{id: property.id }) }}">{{ property.name }}</a>
+                                <a href="{{ path('admin_properties_edit',{id: property.id }) }}">{{ property.name }}</a>
                             </td>
 
                             <td class="text-end">
                                 <div class="btn-group" role="group" aria-label="Действия">
-                                    <a href="{{ path('properties_edit', {id: property.id}) }}"
+                                    <a href="{{ path('admin_properties_edit', {id: property.id}) }}"
                                        class="btn btn-sm btn-outline-primary"
                                        title="Редактировать"
                                        aria-label="Редактировать">
@@ -54,7 +54,7 @@
                                     </a>
 
                                     <form method="post"
-                                          action="{{ path('properties_delete', {id: property.id}) }}"
+                                          action="{{ path('admin_properties_delete', {id: property.id}) }}"
                                           class="d-inline"
                                           data-controller="category"
                                           onsubmit="return confirm('Удалить категорию «{{ property.name }}»?');">

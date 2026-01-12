@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/properties', name: 'properties_')]
+#[Route('admin/properties', name: 'admin_properties_')]
 final class PropertiesController extends AbstractController
 {
     #[Route('/', name: 'index', methods: ['GET'])]

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends '../admin.html.twig' %}
 
 {% block title %}New ProductProperty{% endblock %}
 
@@ -7,5 +7,5 @@
 
     {{ include('product_property/_form.html.twig') }}
 
-    <a href="{{ path('app_product_property_index') }}">back to list</a>
+    <a href="{{ path('product_property_index') }}">back to list</a>
 {% endblock %}

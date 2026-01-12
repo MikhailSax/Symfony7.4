@@ -1,12 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin.html.twig' %}
 
 {% block body %}
     <div class="category-create">
-        <h1 class="category-create_title">Создание Категории</h1>
+        <h1 class="category-create_title">Редактирование Категории</h1>
     </div>
 
-    <div class="breadcrumb-category">
-        {{ include('components/breadcrumb.html.twig') }}
-    </div>
+{#    <div class="breadcrumb-category">#}
+{#        {{ include('components/breadcrumb.html.twig') }}#}
+{#    </div>#}
     {{ include ('category/form/create.html.twig') }}
 {% endblock %}

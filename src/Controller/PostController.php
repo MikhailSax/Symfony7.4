@@ -11,9 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 
+#[Route('/admin/posts', name: 'admin_posts_')]
 class PostController extends AbstractController
 {
-    #[Route('/posts', name: 'posts', methods: ['GET'])]
+    #[Route('/', name: 'index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
         $posts = $entityManager->getRepository(Post::class)->findAll();
@@ -24,7 +25,7 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/post/create', name: 'post_create', methods: ['GET', 'POST'])]
+    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(EntityManagerInterface $entityManager, Request $request): Response
     {
         $post = new Post();
@@ -51,7 +52,7 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('post/{id}', name: 'post_show', methods: ['GET'])]
+    #[Route('/post/{id}', name: 'show', methods: ['GET'])]
     public function show(EntityManagerInterface $entityManager, int $id): Response
     {
         $post = $entityManager->getRepository(Post::class)->find($id);
@@ -65,7 +66,7 @@ class PostController extends AbstractController
         return new Response('Пост с id: ' . $post->getId() . '\n' . ' Название поста: ' . $post->getName());
     }
 
-    #[Route('post/delete/{id}', name: 'post_delete', methods: ['GET'])]
+    #[Route('post/delete/{id}', name: 'delete', methods: ['GET'])]
     public function delete(EntityManagerInterface $entityManager, int $id): Response
     {
         $product = $entityManager->getRepository(Post::class)->find($id);

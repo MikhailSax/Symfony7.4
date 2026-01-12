@@ -1,0 +1,60 @@
+/*body {*/
+/*    background-color: lightgray;*/
+/*}*/
+
+
+@use 'components/header';
+@use 'components/footer';
+@use "registration.scss";
+
+// Основные переменные
+$primary-color: #4361ee;
+$secondary-color: #3a0ca3;
+$accent-color: #fbbf24;
+$dark-color: #0f172a;
+$light-color: #f8fafc;
+
+// Общие стили
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #334155;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+main {
+    flex: 1;
+    padding: 2rem 0;
+}
+
+// Утилиты
+.btn-primary {
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    border: none;
+
+    &:hover {
+        background: linear-gradient(135deg, darken($primary-color, 10%), darken($secondary-color, 10%));
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba($primary-color, 0.3);
+    }
+}
+
+.section-title {
+    color: $dark-color;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: $primary-color;
+        border-radius: 2px;
+    }
+}

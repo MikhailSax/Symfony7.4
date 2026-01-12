@@ -11,8 +11,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomePageController extends AbstractController
 {
-    #[Route('/',
-        name: 'home',
+    #[Route('/admin',
+        name: 'admin',
         methods: ['GET'],
         alias:['homepage']
     )]

@@ -1,0 +1,164 @@
+{% extends 'guest.html.twig'%}
+    {% block title %}Регистрация{% endblock %}
+    {% block body %}
+        <div class="registration-container">
+            <div class="registration-card">
+                <!-- Логотип -->
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="bi bi-person-plus"></i>
+                    </div>
+                </div>
+
+                <h2 class="form-title">Регистрация</h2>
+
+                <!-- Форма регистрации -->
+                <form action="{{ path('app_register') }}" method="post" id="registrationForm" novalidate>
+                    {{ form_start(registrationForm) }}
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <div class="form-floating">
+                            {{ form_widget(registrationForm.email, {'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'name@example.com',
+                                'data-validate': 'email'
+                            }}) }}
+                            {{ form_label(registrationForm.email, 'Email') }}
+                        </div>
+                        <div class="invalid-feedback" id="email-error"></div>
+                    </div>
+
+                    <!-- Телефон -->
+                    <div class="form-group">
+                        <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-phone"></i>
+                    </span>
+                            <div class="form-floating flex-grow-1">
+                                {{ form_widget(registrationForm.phone, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': '+7 (999) 999-99-99',
+                                    'data-validate': 'phone'
+                                }}) }}
+                                {{ form_label(registrationForm.phone, 'Номер телефона') }}
+                            </div>
+                        </div>
+                        <div class="invalid-feedback" id="phone-error"></div>
+                    </div>
+
+                    <!-- Имя -->
+                    <div class="form-group">
+                        <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person"></i>
+                    </span>
+                            <div class="form-floating flex-grow-1">
+                                {{ form_widget(registrationForm.name, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Иван Иванов',
+                                    'data-validate': 'name'
+                                }}) }}
+                                {{ form_label(registrationForm.name, 'Ваше имя') }}
+                            </div>
+                        </div>
+                        <div class="invalid-feedback" id="name-error"></div>
+                    </div>
+
+                    <!-- Пароль -->
+                    <div class="form-group">
+                        <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock"></i>
+                    </span>
+                            <div class="form-floating flex-grow-1 position-relative">
+                                {{ form_widget(registrationForm.plainPassword, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Придумайте пароль',
+                                    'id': 'passwordInput',
+                                    'data-validate': 'password'
+                                }}) }}
+                                {{ form_label(registrationForm.plainPassword, 'Пароль') }}
+                                <button type="button" class="toggle-password" id="togglePasswordBtn">
+                                    <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Индикатор сложности пароля -->
+                        <div class="password-strength mt-2">
+                            <div class="strength-bar" id="passwordStrength"></div>
+                        </div>
+
+                        <!-- Требования к паролю -->
+                        <div class="password-requirements mt-2">
+                            <div class="requirement" id="reqLength">
+                                <i class="bi bi-circle"></i>
+                                <span>Не менее 6 символов</span>
+                            </div>
+                            <div class="requirement" id="reqUppercase">
+                                <i class="bi bi-circle"></i>
+                                <span>Хотя бы одна заглавная буква</span>
+                            </div>
+                            <div class="requirement" id="reqNumber">
+                                <i class="bi bi-circle"></i>
+                                <span>Хотя бы одна цифра</span>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback" id="password-error"></div>
+                    </div>
+
+                    <!-- Соглашение с условиями -->
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form_widget(registrationForm.agreeTerms, {'attr': {
+                                'class': 'form-check-input',
+                                'data-validate': 'terms'
+                            }}) }}
+                            {{ form_label(registrationForm.agreeTerms, 'Согласен с условиями использования', {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                        <div class="invalid-feedback" id="terms-error"></div>
+                    </div>
+
+                    <!-- Кнопка регистрации -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-register" id="submitBtn" disabled>
+                            <i class="bi bi-person-plus me-2"></i> Зарегистрироваться
+                        </button>
+                    </div>
+
+                    {{ form_end(registrationForm) }}
+                </form>
+
+                <!-- Разделитель -->
+                <div class="divider">
+                    <span>или войдите через</span>
+                </div>
+
+                <!-- Социальные кнопки -->
+                <div class="social-buttons">
+                    <a href="" class="btn btn-social btn-yandex">
+                        <i class="bi bi-yandex"></i>
+                        Яндекс
+                    </a>
+                    <a href="" class="btn btn-social btn-vk">
+                        <i class="bi bi-vimeo"></i>
+                        VK
+                    </a>
+                    <a href="" class="btn btn-social btn-mail">
+                        <i class="bi bi-envelope"></i>
+                        Mail.ru
+                    </a>
+                </div>
+
+                <!-- Ссылка на вход -->
+                <div class="login-link mt-4">
+                    Уже есть аккаунт? <a href="{{ path('app_login') }}">Войти</a>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+
+
+

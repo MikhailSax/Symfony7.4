@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin.html.twig' %}
 {% set route = app.request.attributes.get('_route') %}
 {% block title %}{{ title }}{% endblock %}
 
@@ -16,7 +16,7 @@
             </div>
         {% endif %}
         <div class="d-flex gap-2">
-            <a href="{{ path('category_create') }}" class="btn btn-primary">
+            <a href="{{ path('admin_category_create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-lg me-1"></i>
                 Добавить
             </a>
@@ -44,7 +44,7 @@
                             <td class="text-muted">{{ category.id }}</td>
 
                             <td class="fw-semibold">
-                                <a href="{{ path('category_edit',{slug: category.slug }) }}">{{ category.title }}</a>
+                                <a href="{{ path('admin_category_edit',{slug: category.slug }) }}">{{ category.title }}</a>
                             </td>
 
                             <td>
@@ -65,7 +65,7 @@
 
                             <td class="text-end">
                                 <div class="btn-group" role="group" aria-label="Действия">
-                                    <a href="{{ path('category_edit', {slug: category.slug}) }}"
+                                    <a href="{{ path('admin_category_edit', {slug: category.slug}) }}"
                                        class="btn btn-sm btn-outline-primary"
                                        title="Редактировать"
                                        aria-label="Редактировать">
@@ -73,7 +73,7 @@
                                     </a>
 
                                     <form method="post"
-                                          action="{{ path('category_delete', {slug: category.slug}) }}"
+                                          action="{{ path('admin_category_delete', {slug: category.slug}) }}"
                                           class="d-inline"
                                           data-controller="category"
                                           onsubmit="return confirm('Удалить категорию «{{ category.title }}»?');">

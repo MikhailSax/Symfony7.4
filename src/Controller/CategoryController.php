@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/category', name: 'category_')]
+#[Route('admin/category', name: 'admin_category_')]
 final class CategoryController extends AbstractController
 {
     #[Route(name: 'index', methods: ['GET'])]
@@ -40,7 +40,7 @@ final class CategoryController extends AbstractController
             $category->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->persist($category);
             $entityManager->flush();
-            return $this->redirectToRoute('category_index');
+            return $this->redirectToRoute('admin_category_index');
         }
         return $this->render('category/create.html.twig', [
             'form' => $form,
@@ -62,7 +62,7 @@ final class CategoryController extends AbstractController
             $entityManager->persist($category);
             $entityManager->flush();
 
-            return $this->redirectToRoute('category_index');
+            return $this->redirectToRoute('admin_category_index');
         }
         return $this->render('category/create.html.twig', [
             'form' => $form,
@@ -87,7 +87,7 @@ final class CategoryController extends AbstractController
             $entityManager->remove($category);
             $entityManager->flush();
 
-            return $this->redirectToRoute('category_index', [
+            return $this->redirectToRoute('admin_category_index', [
                 'message' => 'Категория'
             ]);
         }

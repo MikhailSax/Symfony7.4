@@ -28,6 +28,7 @@ class CategoryFormType extends AbstractType
                 'required' => false,
             ])
             ->add('is_active',CheckboxType::class,[
+                'required' => false,
                 'attr' => [
                     'class' => 'form-check-input',
                     'id' => 'flexSwitchCheckDefault',
