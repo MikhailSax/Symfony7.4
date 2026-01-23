@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -14,36 +15,42 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('product:read')]
     private ?int $id = null;
 
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
+    #[Groups('product:read')]
     private ?string $title = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 30, max: 1000)]
     #[ORM\Column(length: 255)]
+    #[Groups('product:read')]
     private ?string $description = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 10, max: 255)]
     #[ORM\Column(length: 255)]
+    #[Groups('product:read')]
     private ?string $short_description = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
+    #[Groups('product:read')]
     private ?string $slug = null;
 
     #[Assert\NotBlank]
     #[ORM\ManyToOne(inversedBy: 'products')]
+    #[Groups('product:read')]
     private ?Category $category_id = null;
 
     /**
      * @var Collection<int, Image>
      */
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'product')]
-    private Collection $image_id;
+    private Collection $image;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -68,7 +75,7 @@ class Product
 
     public function __construct()
     {
-        $this->image_id = new ArrayCollection();
+        $this->image = new ArrayCollection();
         $this->productProperties = new ArrayCollection();
         $this->productPrices = new ArrayCollection();
     }
@@ -141,15 +148,15 @@ class Product
     /**
      * @return Collection<int, Image>
      */
-    public function getImageId(): Collection
+    public function getImage(): Collection
     {
-        return $this->image_id;
+        return $this->image;
     }
 
     public function addImageId(Image $imageId): static
     {
-        if (!$this->image_id->contains($imageId)) {
-            $this->image_id->add($imageId);
+        if (!$this->image->contains($imageId)) {
+            $this->image->add($imageId);
             $imageId->setProduct($this);
         }
 
@@ -158,7 +165,7 @@ class Product
 
     public function removeImageId(Image $imageId): static
     {
-        if ($this->image_id->removeElement($imageId)) {
+        if ($this->image->removeElement($imageId)) {
             // set the owning side to null (unless already changed)
             if ($imageId->getProduct() === $this) {
                 $imageId->setProduct(null);

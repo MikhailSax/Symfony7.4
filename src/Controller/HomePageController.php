@@ -11,19 +11,18 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomePageController extends AbstractController
 {
-    #[Route('/admin',
+    #[Route('/',
         name: 'admin',
         methods: ['GET'],
-        alias:['homepage']
+        alias: ['homepage']
     )]
-    public function home(LoggerInterface $logger,MessageGenerator $message): Response
+    public function home(): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            return $this->redirectToRoute('admin_product_index');
+        }
 
-        $message = $message->getMessage();
-
-        $logger->info('Вы посетили главную страницу!');
-        return $this->render('home/home.html.twig',[
-            'message' => $message,
-        ]);
     }
 }

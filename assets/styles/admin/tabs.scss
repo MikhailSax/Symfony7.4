@@ -1,0 +1,121 @@
+// assets/styles/components/_admin-tabs.scss
+
+// Стили для заголовка
+h1 {
+    color: #212529;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+// Стили для навигации табов
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 1.5rem;
+
+    .nav-item {
+        margin-bottom: -2px;
+
+        .nav-link {
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            color: #6c757d;
+            background: transparent;
+            transition: all 0.2s ease;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+
+            &:hover {
+                color: #dc3545;
+                background-color: rgba(220, 53, 69, 0.05);
+            }
+
+            &.active {
+                color: #dc3545;
+                border-bottom-color: #dc3545;
+                background-color: white;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -2px;
+                    left: 0;
+                    right: 0;
+                    height: 2px;
+                    background: #dc3545;
+                }
+            }
+        }
+    }
+}
+
+// Стили для содержимого табов
+.tab-content {
+    .tab-pane {
+        padding: 1.5rem 0;
+        animation: fadeIn 0.3s ease;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Улучшенные стили для формы внутри табов
+form {
+    .form-control:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+    }
+
+    .btn-primary {
+        background-color: #dc3545;
+        border-color: #dc3545;
+
+        &:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+    }
+
+    // Стили для обязательных полей
+    label.required::after {
+        content: '*';
+        color: #dc3545;
+        margin-left: 0.25rem;
+    }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .nav-tabs {
+        .nav-item {
+            .nav-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    }
+
+    .tab-content {
+        .tab-pane {
+            padding: 1rem 0;
+        }
+    }
+}

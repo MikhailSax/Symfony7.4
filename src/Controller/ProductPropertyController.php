@@ -33,7 +33,7 @@ final class ProductPropertyController extends AbstractController
             $entityManager->persist($productProperty);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_property_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('product_property/new.html.twig', [

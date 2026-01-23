@@ -1,50 +1,99 @@
 {% set route = app.request.attributes.get('_route') %}
 
-<div class="d-flex flex-column h-100">
-    <div class="p-3">
-        <a href="{{ path('admin') }}" class="d-flex align-items-center gap-2 text-decoration-none">
-      <div class="d-inline-flex align-items-center justify-content-center rounded-circle  text-white"
-            style="width: 28px; height: 28px; font-size: 14px;">
-        <img src="{{ asset('images/logo.png') }}" alt="Логотип" width="120px" height="80px"/>
-      </div>
-            <span class="fw-semibold text-dark">Админ-панель</span>
+<nav class="admin-nav bg-white border-end h-100">
+    <!-- Логотип -->
+    <div class="p-4 border-bottom">
+        <a href="{{ path('admin') }}" class="text-decoration-none">
+            <div class="admin-logo">
+                <img src="{{ asset('images/logo.svg') }}" alt="Логотип" height="40">
+            </div>
         </a>
+    </div>
 
-        <hr class="my-3">
-        <div class="small text-uppercase text-muted fw-semibold mb-2">Пользователи</div>
-        <div class="list-group list-group-flush">
-            <a href="{{ path('admin_users_index') }}"
-               class="list-group-item list-group-item-action {{ route == 'admin_users_index' ? 'active' : '' }}">
-                Пользователи
-            </a>
-            <a href=""
-               class="list-group-item list-group-item-action ">
-                Заказы
-            </a>
+    <!-- Навигация -->
+    <div class="p-3">
+        <!-- Пользователи и заказы -->
+        <div class="mb-3">
+            <button class="btn btn-toggle w-100 text-start d-flex align-items-center p-2 rounded-0 border-0 border-bottom"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#usersCollapse"
+                    aria-expanded="false"
+            aria-controls="usersCollapse">
+            <i class="bi bi-people me-2"></i>
+            <span class="fw-medium">Пользователи</span>
+            <i class="bi bi-chevron-down ms-auto transition-rotate"></i>
+            </button>
+
+            <div class="collapse" id="usersCollapse"> <!-- ИЗМЕНИЛ: убрал show -->
+                <div class="list-group list-group-flush border-0">
+                    <a href="{{ path('admin_users_index') }}"
+                       class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route == 'admin_users_index' ? 'active' : '' }}">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person me-2"></i>
+                            <span>Пользователи</span>
+                            <span class="badge bg-danger rounded-pill ms-auto">24</span>
+                        </div>
+                    </a>
+                    <a href="#"
+                       class="list-group-item list-group-item-action border-0 px-4 py-2">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-cart me-2"></i>
+                            <span>Заказы</span>
+                            <span class="badge bg-warning text-dark rounded-pill ms-auto">5</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="small text-uppercase text-muted fw-semibold mb-2">Каталог</div>
+        <!-- Каталог -->
+        <div class="mb-3">
+            <button class="btn btn-toggle w-100 text-start d-flex align-items-center p-2 rounded-0 border-0 border-bottom"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#catalogCollapse"
+                    aria-expanded="false"
+            aria-controls="catalogCollapse">
+            <i class="bi bi-grid me-2"></i>
+            <span class="fw-medium">Каталог</span>
+            <i class="bi bi-chevron-down ms-auto transition-rotate"></i>
+            </button>
 
-        <div class="list-group list-group-flush">
-            <a href="{{ path('admin_category_index') }}"
-               class="list-group-item list-group-item-action {{ route == 'admin_category_index' ? 'active' : '' }}">
-                Категории
-            </a>
-
-            <a href="{{ path('admin_product_index') }}"
-               class="list-group-item list-group-item-action {{ route == 'admin_product_index' ? 'active' : '' }}">
-                Продукция
-            </a>
-
-            <a href="{{ path('admin_properties_index') }}"
-               class="list-group-item list-group-item-action {{ route == 'admin_properties_index' ? 'active' : '' }}">
-                Характеристики
-            </a>
+            <div class="collapse" id="catalogCollapse"> <!-- ИЗМЕНИЛ: убрал show -->
+                <div class="list-group list-group-flush border-0">
+                    <a href="{{ path('admin_category_index') }}"
+                       class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route == 'admin_category_index' ? 'active' : '' }}">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-folder me-2"></i>
+                            <span>Категории</span>
+                        </div>
+                    </a>
+                    <a href="{{ path('admin_product_index') }}"
+                       class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route == 'admin_product_index' ? 'active' : '' }}">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-box me-2"></i>
+                            <span>Товары</span>
+                            <span class="badge bg-danger rounded-pill ms-auto">156</span>
+                        </div>
+                    </a>
+                    <a href="{{ path('admin_properties_index') }}"
+                       class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route == 'admin_properties_index' ? 'active' : '' }}">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-tags me-2"></i>
+                            <span>Характеристики</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Футер -->
     <div class="mt-auto p-3 border-top">
-        <a href="/" class="btn btn-outline-secondary w-100">На сайт</a>
+        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger w-100">
+            <i class="bi bi-box-arrow-left me-2"></i>
+            Выйти
+        </a>
     </div>
-</div>
-
+</nav>

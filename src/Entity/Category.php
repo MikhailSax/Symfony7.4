@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
@@ -15,10 +16,12 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['category:read','product:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['category:read','product:read'])]
     private ?string $title = null;
 
     #[Assert\NotBlank]
@@ -124,17 +127,6 @@ class Category
         return $this;
     }
 
-    public function getParentId(): ?int
-    {
-        return $this->parent_id;
-    }
-
-    public function setParentId(?int $parent_id): static
-    {
-        $this->parent_id = $parent_id;
-
-        return $this;
-    }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -167,7 +159,7 @@ class Category
 
     public function getParent(): ?self
     {
-        return $this->parent;
+        return $this->parent ;
     }
 
     public function setParent(?self $parent): static

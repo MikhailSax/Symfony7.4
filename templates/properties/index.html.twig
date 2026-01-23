@@ -1,36 +1,47 @@
 {% extends 'admin.html.twig' %}
-
-{% block title %}Hello PropertiesController!{% endblock %}
+{% set route = app.request.attributes.get('_route') %}
+{% block title %}{{ title ?? 'Характеристики' }}{% endblock %}
 
 {% block body %}
-    <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between mb-3">
-        <div>
-            <h1 class="h3 mb-0">Список характеристик</h1>
-            <div class="text-muted small">Управление характеристиками</div>
+    <!-- Заголовок страницы -->
+    <div class="admin-page-header">
+        <div class="header-content">
+            <h1>Список характеристик</h1>
+            <p class="page-subtitle">Управление характеристиками продуктов</p>
         </div>
+
         {% if errorMessage is defined %}
-            <div class="alert alert-danger" role="alert">
-                <div class="alert alert-danger" role="alert">
-                    {{ errorMessage }}
-                </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ errorMessage }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endif %}
-        <div class="d-flex gap-2">
+
+        {% if successMessage is defined %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ successMessage }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
+        <div class="header-actions">
             <a href="{{ path('admin_properties_create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-lg me-1"></i>
-                Добавить
+                Добавить характеристику
             </a>
         </div>
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
+    <!-- Карточка с таблицей характеристик -->
+    <div class="admin-table-card">
+        <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="admin-table">
+                    <thead>
                     <tr>
                         <th style="width: 80px;">ID</th>
                         <th>Название</th>
+                        <th>Тип данных</th>
                         <th class="text-end" style="width: 120px;">Действия</th>
                     </tr>
                     </thead>
@@ -38,33 +49,38 @@
                     <tbody>
                     {% for property in properties %}
                         <tr>
-                            <td class="text-muted">{{ property.id }}</td>
+                            <td class="entity-id" data-label="ID">{{ property.id }}</td>
 
-                            <td class="fw-semibold">
-                                <a href="{{ path('admin_properties_edit',{id: property.id }) }}">{{ property.name }}</a>
+                            <td data-label="Название">
+                                <div class="entity-title">
+                                    <a href="{{ path('admin_properties_edit', {id: property.id}) }}">
+                                        {{ property.name }}
+                                    </a>
+                                </div>
                             </td>
 
-                            <td class="text-end">
-                                <div class="btn-group" role="group" aria-label="Действия">
+                            <td data-label="Тип данных">
+                                <span class="badge bg-light">{{ property.type ?? 'string' }}</span>
+                            </td>
+
+
+                            <td class="entity-actions text-end" data-label="Действия">
+                                <div class="btn-group" role="group">
                                     <a href="{{ path('admin_properties_edit', {id: property.id}) }}"
-                                       class="btn btn-sm btn-outline-primary"
-                                       title="Редактировать"
-                                       aria-label="Редактировать">
+                                       class="btn btn-outline-primary"
+                                       title="Редактировать">
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
                                     <form method="post"
                                           action="{{ path('admin_properties_delete', {id: property.id}) }}"
                                           class="d-inline"
-                                          data-controller="category"
-                                          onsubmit="return confirm('Удалить категорию «{{ property.name }}»?');">
+                                          onsubmit="return confirm('Удалить характеристику «{{ property.name }}»?');">
                                         <input type="hidden" name="_token"
-                                               value="{{ csrf_token('delete' ~ property.id) }}">
-                                        <button class="btn btn-sm btn-outline-danger"
-                                                title="Удалить"
-                                                aria-label="Удалить"
-                                                data-action="click->category#greet"
-                                        >
+                                               value="{{ csrf_token('delete_property' ~ property.id) }}">
+                                        <button type="submit"
+                                                class="btn btn-outline-danger"
+                                                title="Удалить">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -72,9 +88,19 @@
                             </td>
                         </tr>
                     {% else %}
-                        <tr>
-                            <td colspan="6" class="text-center text-muted py-4">
-                                Характеристик пока нет
+                        <tr class="empty-row">
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <div class="empty-icon">
+                                        <i class="bi bi-list-check"></i>
+                                    </div>
+                                    <p class="empty-text">Характеристик пока нет</p>
+                                    <div class="empty-action">
+                                        <a href="{{ path('admin_properties_create') }}" class="btn btn-link">
+                                            Добавить первую характеристику
+                                        </a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
@@ -82,5 +108,81 @@
                 </table>
             </div>
         </div>
+
+        <!-- Пагинация -->
+        {% if properties|length > 10 %}
+            <div class="pagination-container d-flex justify-content-between align-items-center">
+                <div class="pagination-info">
+                    Показано {{ properties|length }} из {{ totalCount ?? properties|length }} характеристик
+                </div>
+                <nav aria-label="Навигация по страницам">
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
+                            <a class="page-link"
+                               href="{{ path(route, {page: currentPage - 1}) }}"
+                               tabindex="-1">
+                                Назад
+                            </a>
+                        </li>
+                        {% for page in 1..totalPages %}
+                            <li class="page-item {% if page == currentPage %}active{% endif %}">
+                                <a class="page-link" href="{{ path(route, {page: page}) }}">
+                                    {{ page }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
+                            <a class="page-link"
+                               href="{{ path(route, {page: currentPage + 1}) }}">
+                                Вперед
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        {% endif %}
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация tooltips
+            if (typeof bootstrap !== 'undefined') {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            }
+
+            // Улучшенное подтверждение удаления
+            document.querySelectorAll('form').forEach(form => {
+                if (form.action.includes('delete')) {
+                    const button = form.querySelector('button[type="submit"]');
+                    if (button) {
+                        button.addEventListener('click', function(e) {
+                            const row = this.closest('tr');
+                            const entityName = row.querySelector('.entity-title a, .entity-title').textContent.trim();
+                            if (!confirm(`Вы уверены, что хотите удалить характеристику «${entityName}»?\nЭто действие нельзя отменить.`)) {
+                                e.preventDefault();
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Подсветка строк
+            const rows = document.querySelectorAll('.admin-table tbody tr:not(.empty-row)');
+            rows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+                });
+
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+
 {% endblock %}

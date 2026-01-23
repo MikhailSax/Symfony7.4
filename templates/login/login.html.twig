@@ -1,38 +1,94 @@
-{% extends 'base.html.twig' %}
+{% extends 'guest.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Вход{% endblock %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="row justify-content-center w-100">
+            <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+                <div class="card border-0 shadow-lg rounded-3">
+                    <div class="card-body p-4">
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+                        <!-- Логотип -->
+                        <div class="text-center mb-4">
+                                <img src="{{ asset('images/logo.svg') }}" alt="Логотип" class="mb-3" style="height: 60px;">
+                        </div>
+
+                        <!-- Сообщения об ошибках -->
+                        {% if error %}
+                            <div class="alert alert-danger d-flex align-items-center mb-3 py-2">
+                                <svg class="bi flex-shrink-0 me-2" width="20" height="20" fill="currentColor">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                                </svg>
+                                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                            </div>
+                        {% endif %}
+
+                        <!-- Уже авторизован -->
+                        {% if app.user %}
+                            <div class="alert alert-success d-flex justify-content-between align-items-center mb-3 py-2">
+                                <div>
+                                    Вы вошли как <strong>{{ app.user.userIdentifier }}</strong>
+                                </div>
+                                <a href="{{ logout_path() }}" class="btn btn-outline-danger btn-sm">Выйти</a>
+                            </div>
+                        {% endif %}
+
+                        <!-- Форма входа -->
+                        <form method="post" class="mb-3">
+                            <!-- Поле email -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label fw-semibold mb-2">Email</label>
+                                <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <svg width="20" height="20" fill="#6c757d">
+                                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383l-4.708 2.825L15 11.105V5.383zm-7 3.114L1 5.383v5.722l4.708 2.897L8 8.497z"/>
+                                    </svg>
+                                </span>
+                                    <input
+                                        type="email"
+                                        value="{{ last_username }}"
+                                        name="_username"
+                                        id="username"
+                                        class="form-control border-start-0 py-2"
+                                        placeholder="Введите email"
+                                        autocomplete="email"
+                                        required
+                                        autofocus>
+                                </div>
+                            </div>
+
+                            <!-- Поле пароля -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label fw-semibold mb-2">Пароль</label>
+                                <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <svg width="20" height="20" fill="#6c757d">
+                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                                    </svg>
+                                </span>
+                                    <input
+                                        type="password"
+                                        name="_password"
+                                        id="password"
+                                        class="form-control border-start-0 py-2"
+                                        placeholder="Введите пароль"
+                                        autocomplete="current-password"
+                                        required>
+                                </div>
+                            </div>
+
+                            <!-- CSRF токен -->
+                            <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+                            <!-- Кнопка входа -->
+                            <button type="submit" class="btn btn-danger w-100 py-2 fw-bold mt-3" style="background-color: #e53935; border-color: #e53935;">
+                                Войти
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
-        {% endif %}
-
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
-            </div>
-        #}
-
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    </form>
+        </div>
+    </div>
 {% endblock %}

@@ -21,7 +21,7 @@ final class PropertiesController extends AbstractController
 
         return $this->render('properties/index.html.twig', [
             'properties' => $properties,
-            'controller_name' => 'PropertiesController',
+            'title' => 'Характеристики',
         ]);
     }
 
@@ -35,7 +35,7 @@ final class PropertiesController extends AbstractController
             $entityManager->persist($property);
             $entityManager->flush();
 
-            return $this->redirectToRoute('properties_index');
+            return $this->redirectToRoute('admin_properties_index');
         }
 
         return $this->render('properties/create.html.twig', [
@@ -55,7 +55,7 @@ final class PropertiesController extends AbstractController
             $entityManager->persist($property);
             $entityManager->flush();
 
-            return $this->redirectToRoute('properties_index');
+            return $this->redirectToRoute('index');
         }
 
         return $this->render('properties/create.html.twig', [
@@ -72,8 +72,8 @@ final class PropertiesController extends AbstractController
         $entityManager->remove($property);
         $entityManager->flush();
 
-        return $this->redirectToRoute('category_index', [
-            'message' => 'Категория'
+        return $this->redirectToRoute('index', [
+            'message' => 'Свойство успешно созданно'
         ]);
 
     }

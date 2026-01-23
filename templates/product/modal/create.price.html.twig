@@ -1,181 +1,332 @@
-<section>
-    <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between mb-3">
-        <div>
-            <h1 class="h3 mb-0 mt-3">Список цен продукта</h1>
-            <div class="text-muted small">Управление ценами</div>
+<div class="admin-page-header">
+    <div class="header-content">
+        <h1>Список цен продукта</h1>
+        <p class="page-subtitle">Управление ценами для {{ product.title ?? 'продукта' }}</p>
+    </div>
+
+    {% if errorMessage is defined %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ errorMessage }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        {% if errorMessage is defined %}
-            <div class="alert alert-danger" role="alert">
-                <div class="alert alert-danger" role="alert">
-                    {{ errorMessage }}
-                </div>
-            </div>
-        {% endif %}
-        <div class="d-flex gap-2">
-            <a href="{{ path('admin_properties_create') }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <i class="bi bi-plus-lg me-1"></i>
-                Добавить
+    {% endif %}
+
+    {% if successMessage is defined %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ successMessage }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <div class="header-actions">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPriceModal">
+            <i class="bi bi-plus-lg me-1"></i>
+            Добавить цену
+        </button>
+    </div>
+</div>
+
+<!-- Карточка с таблицей цен -->
+<div class="admin-table-card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th style="width: 80px;">ID</th>
+                    <th>Название</th>
+                    <th>Цена за шт.</th>
+                    <th>Количество</th>
+                    <th class="text-end" style="width: 120px;">Действия</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for price in prices %}
+                    <tr>
+                        <td class="entity-id" data-label="ID">{{ price.id }}</td>
+
+                        <td data-label="Название">
+                            <div class="entity-title">
+                                {{ price.name }}
+                            </div>
+                        </td>
+
+                        <td data-label="Цена за шт.">
+                            <span class="badge bg-light">{{ price.price|number_format(2, '.', ' ') }} RUB</span>
+                        </td>
+
+                        <td data-label="Количество">
+                            {{ price.quantity }} шт.
+                        </td>
+
+                        <td class="entity-actions text-end" data-label="Действия">
+                            <div class="btn-group" role="group">
+                                <button type="button"
+                                        class="btn btn-outline-primary edit-price-btn"
+                                        data-price-id="{{ price.id }}"
+                                        data-price-name="{{ price.name }}"
+                                        data-price-quantity="{{ price.quantity }}"
+                                        data-price-price="{{ price.price }}"
+                                        title="Редактировать">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+
+                                <form method="post"
+                                      action="{{ path('product_price_delete', {id: price.id}) }}"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Удалить цену «{{ price.name }}»?');">
+                                    <input type="hidden" name="_token"
+                                           value="{{ csrf_token('delete_price' ~ price.id) }}">
+                                    <button type="submit"
+                                            class="btn btn-outline-danger"
+                                            title="Удалить">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr class="empty-row">
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="bi bi-tag"></i>
+                                </div>
+                                <p class="empty-text">Цен для этого продукта пока нет</p>
+                                <div class="empty-action">
+                                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#createPriceModal">
+                                        Добавить первую цену
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Информация о продукте в футере -->
+    <div class="pagination-container">
+        <div class="pagination-info">
+            {% if product %}
+                Продукт: <strong>{{ product.title }}</strong> (ID: {{ product.id }})
+            {% endif %}
+        </div>
+        <div>
+            <a href="{{ path('admin_product_edit', {id: product.id}) }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>
+                Вернуться к продукту
             </a>
         </div>
     </div>
+</div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                    <tr>
-                        <th style="width: 80px;">ID</th>
-                        <th>Название</th>
-                        <th>Цена за шт.</th>
-                        <th>Количество</th>
-                        <th class="text-end" style="width: 120px;">Действия</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {% for price in prices %}
-                        <tr>
-                            <td class="text-muted">{{ price.id }}</td>
-
-                            <td class="fw-semibold">
-                                <a href="">{{ price.name }}</a>
-                            </td>
-
-                            <td>
-                                <span>{{ price.price }} RUB</span>
-                            </td>
-
-                            <td>
-                                {{ price.quantity }}
-                            </td>
-                            <td class="text-end">
-                                <div class="btn-group" role="group" aria-label="Действия">
-                                    <a href=""
-                                       class="btn btn-sm btn-outline-primary"
-                                       title="Редактировать"
-                                       aria-label="Редактировать">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-
-                                    <form method="post"
-                                          action=""
-                                          class="d-inline"
-                                          data-controller="category"
-                                          onsubmit="return confirm('Удалить категорию «{{ price.name }}»?');">
-                                        <input type="hidden" name="_token"
-                                               value="{{ csrf_token('delete' ~ price.id) }}">
-                                        <button class="btn btn-sm btn-outline-danger"
-                                                title="Удалить"
-                                                aria-label="Удалить"
-                                                data-action="click->category#greet"
-                                        >
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="6" class="text-center text-muted py-4">
-                                Характеристик пока нет
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</section>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Модальное окно создания цены -->
+<div class="modal fade" id="createPriceModal" tabindex="-1" aria-labelledby="createPriceModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Создание цены за тираж</h5>
+                <h5 class="modal-title" id="createPriceModalLabel">Добавить цену за тираж</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form action="{{ path('product_price_new') }}" method="POST" class="form-create_price">
+            <form action="{{ path('product_price_new') }}" method="POST" id="priceForm">
+                <div class="modal-body">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Название</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                        <label for="name" class="form-label">Название <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" required
+                               placeholder="Например: Оптовая партия 100+">
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Количество</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity"required>
+                        <label for="quantity" class="form-label">Количество <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="quantity" name="quantity"
+                               required min="1" placeholder="Минимальное количество">
+                        <div class="form-text">Минимальное количество товара для этой цены</div>
                     </div>
                     <div class="mb-3">
-                        <label for="price" class="form-label">Цена за единицу</label>
-                        <input type="text" id="price" class="form-control" name="price" required>
+                        <label for="price" class="form-label">Цена за единицу <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="price" name="price"
+                                   required min="0" step="0.01" placeholder="0.00">
+                            <span class="input-group-text">RUB</span>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="product_id" class="form-label">ID товара</label>
-                        <input class="form-control" type="number" id="product_id" name="product_id" value="{{ product.getId}}" readonly />
+                        <input class="form-control" type="number" id="product_id" name="product_id"
+                               value="{{ product.id }}" readonly>
                     </div>
-                    <button type="submit" class="btn btn-primary">Отправить</button>
-                    <input type="hidden" id="csrf-token" value="{{ csrf_token('product_item') }}"/>
+                    <input type="hidden" name="_token" value="{{ csrf_token('product_price') }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="submit-text">Создать цену</span>
+                        <span class="loading-spinner d-none"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-                </form>
+<!-- Модальное окно редактирования цены -->
+<div class="modal fade" id="editPriceModal" tabindex="-1" aria-labelledby="editPriceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPriceModalLabel">Редактировать цену</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-            </div>
+            <form action="" method="POST" id="editPriceForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="edit_name" class="form-label">Название <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_quantity" class="form-label">Количество <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="edit_quantity" name="quantity" required min="1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_price" class="form-label">Цена за единицу <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="edit_price" name="price" required min="0" step="0.01">
+                            <span class="input-group-text">RUB</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="edit_price_id" name="id">
+                    <input type="hidden" name="_token" value="{{ csrf_token('edit_product_price') }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const priceForm = document.getElementById('price-form');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Обработчики для редактирования цен
+        document.querySelectorAll('.edit-price-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const priceId = this.dataset.priceId;
+                const priceName = this.dataset.priceName;
+                const priceQuantity = this.dataset.priceQuantity;
+                const pricePrice = this.dataset.pricePrice;
 
+                // Заполняем форму редактирования
+                document.getElementById('edit_name').value = priceName;
+                document.getElementById('edit_quantity').value = priceQuantity;
+                document.getElementById('edit_price').value = pricePrice;
+                document.getElementById('edit_price_id').value = priceId;
+
+                // Устанавливаем action формы
+                const editForm = document.getElementById('editPriceForm');
+                editForm.action = `{{ path('product_price_edit', {id: '__ID__'}) }}`.replace('__ID__', priceId);
+
+                // Показываем модальное окно
+                const editModal = new bootstrap.Modal(document.getElementById('editPriceModal'));
+                editModal.show();
+            });
+        });
+
+        // AJAX отправка формы создания
+        const priceForm = document.getElementById('priceForm');
         if (priceForm) {
             priceForm.addEventListener('submit', async function(e) {
-                e.preventDefault(); // Останавливаем обычную перезагрузку страницы
+                e.preventDefault();
 
-                const form = e.target;
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const submitText = submitBtn.querySelector('.submit-text');
+                const spinner = submitBtn.querySelector('.loading-spinner');
 
-                // 1. Валидация на стороне браузера
-                if (!form.checkValidity()) {
-                    form.reportValidity();
-                    return;
-                }
+                // Показываем спиннер
+                submitText.classList.add('d-none');
+                spinner.classList.remove('d-none');
+                submitBtn.disabled = true;
 
-                // 2. Сбор данных формы
-                const formData = new FormData(form);
-
-                // Преобразуем FormData в обычный объект
-                // Если в вашем ProductPriceType есть getBlockPrefix() (обычно это имя сущности в нижнем регистре),
-                // данные нужно вкладывать в ключ. Если вы сделали return ''; в getBlockPrefix, оставляйте так:
-                const data = Object.fromEntries(formData.entries());
+                const formData = new FormData(this);
 
                 try {
-                    // 3. Отправка запроса
-                    const response = await fetch(form.action, {
+                    const response = await fetch(this.action, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify(data)
+                        body: formData
                     });
 
-                    const result = await response.json();
+                    if (response.ok) {
+                        // Закрываем модальное окно
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('createPriceModal'));
+                        modal.hide();
 
-                    if (response.ok && result.success) {
-                        // Успех
-                        alert('Цена успешно сохранена!');
-                        location.reload(); // Перезагрузка для отображения данных
+                        // Обновляем страницу
+                        location.reload();
                     } else {
-                        // Ошибка валидации Symfony или сервера
-                        console.error('Validation errors:', result.errors);
-                        alert('Ошибка при сохранении: ' + (result.errors || 'Проверьте введенные данные'));
+                        const error = await response.text();
+                        alert('Ошибка при сохранении: ' + error);
+                    }
+                } catch (error) {
+                    console.error('Network error:', error);
+                    alert('Произошла ошибка сети');
+                } finally {
+                    // Восстанавливаем кнопку
+                    submitText.classList.remove('d-none');
+                    spinner.classList.add('d-none');
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+
+        // AJAX отправка формы редактирования
+        const editPriceForm = document.getElementById('editPriceForm');
+        if (editPriceForm) {
+            editPriceForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                try {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        // Закрываем модальное окно
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editPriceModal'));
+                        modal.hide();
+
+                        // Обновляем страницу
+                        location.reload();
+                    } else {
+                        const error = await response.text();
+                        alert('Ошибка при сохранении: ' + error);
                     }
                 } catch (error) {
                     console.error('Network error:', error);
                     alert('Произошла ошибка сети');
                 }
+            });
+        }
+
+        // Очистка формы создания при закрытии модального окна
+        const createModal = document.getElementById('createPriceModal');
+        createModal.addEventListener('hidden.bs.modal', function() {
+            if (priceForm) {
+                priceForm.reset();
+            }
+        });
+
+        // Инициализация tooltips
+        if (typeof bootstrap !== 'undefined') {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
             });
         }
     });

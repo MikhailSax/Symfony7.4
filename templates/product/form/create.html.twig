@@ -1,71 +1,255 @@
-<div>
-    <div class="mb-3 mt-3 form-item">
-        {{ form_label(form.title, 'Название Продукта', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.title, {'attr' : {'class': 'form-control','placeholder':'Календарь-стандарт'}}) }}
+<div class="product-form-container">
+    <div class="form-item mb-3">
+        {{ form_label(form.title, 'Название продукта', {'label_attr': {'class': 'form-label required'}}) }}
+        {{ form_widget(form.title, {'attr' : {
+            'class': 'form-control',
+            'placeholder': 'Календарь-стандарт',
+            'data-length': '255'
+        }}) }}
+        <div class="form-text small text-muted mt-1">
+            <span class="char-count">0</span>/255 символов
+        </div>
         {% if form_errors(form.title) %}
-            <div class="alert alert-danger mt-3" role="alert">
+            <div class="alert alert-danger mt-2" role="alert">
                 {{ form_errors(form.title) }}
             </div>
         {% endif %}
     </div>
-    <div class="mb-3 form-item">
-        {{ form_label(form.slug, 'Ссылка на Продукт', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.slug, {'attr':{class: 'form-control','placeholder': 'Polygrafiya'}}) }}
+
+    <div class="form-item mb-3">
+        {{ form_label(form.slug, 'URL адрес', {'label_attr': {'class': 'form-label required'}}) }}
+        <div class="input-group">
+            <span class="input-group-text">/product/</span>
+            {{ form_widget(form.slug, {'attr': {
+                'class': 'form-control',
+                'placeholder': 'kalendar-standart',
+                'data-length': '100'
+            }}) }}
+        </div>
+        <div class="form-text small text-muted mt-1">
+            <span class="char-count">0</span>/100 символов
+        </div>
         {% if form_errors(form.slug) %}
-            <div class="alert alert-danger mt-3" role="alert">
-                <span>{{ form_errors(form.slug) }}</span>
-            </div>
-        {% endif %}
-    </div>
-    <div class="mb-3 form-item">
-        {{ form_label(form.short_description ,'Короткое описание', {'label_attr':{'class': 'form-label'}}) }}
-        {{ form_widget(form.short_description, {'attr':{class: 'form-control','placeholder': 'Календарь...'}}) }}
-        {% if form_errors(form.short_description) %}
-            <div class="alert alert-danger mt-3" role="alert">
-                <span>{{ form_errors(form.short_description) }}</span>
-            </div>
-        {% endif %}
-    </div>
-    <div class="mb-3 form-item">
-        {{ form_label(form.description ,'Описание', {'label_attr':{'class': 'form-label'}}) }}
-        {{ form_widget(form.description, {'attr':{class: 'form-control','placeholder': 'Полиграфия специализируется...',rows:'3',cols : '50'}}) }}
-        {% if form_errors(form.description) %}
-            <div class="alert alert-danger mt-3" role="alert">
-                <span>{{ form_errors(form.description) }}</span>
-            </div>
-        {% endif %}
-    </div>
-    <div class="mb-3 form-item">
-        {{ form_label(form.category_id ,'Категория', {'label_attr':{'class': 'form-label'}}) }}
-        {{ form_widget(form.category_id, {'attr':{class: 'form-select'}}) }}
-        {% if form_errors(form.category_id) %}
-            <div class="alert alert-danger mt-3" role="alert">
-                <span>{{ form_errors(form.category_id) }}</span>
+            <div class="alert alert-danger mt-2" role="alert">
+                {{ form_errors(form.slug) }}
             </div>
         {% endif %}
     </div>
 
-    <div class="mb-3 form-item">
-        <div class="form-check form-switch">
-            {{ form_widget(form.is_active,{'attr':{'class': 'form-check-input', 'id': 'flexSwitchCheckDefault'}}) }}
-            {{ form_label(form.is_active,'Активен?',{'label_attr' : {'class':'form-check-label'}}) }}
+    <!-- Загрузка изображения -->
+    <div class="form-item mb-3">
+        {{ form_label(form.image, 'Изображение продукта', {'label_attr': {'class': 'form-label'}}) }}
+
+        <div class="image-upload-widget mb-3"
+            {{ stimulus_controller('image-upload', {
+                maxSize: 5242880,
+                allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp']|json_encode,
+                previewMaxWidth: 300
+            }) }}>
+
+            <div class="image-upload-area"
+                 data-image-upload-target="area"
+                 data-action="dragover->image-upload#handleDragOver dragleave->image-upload#handleDragLeave drop->image-upload#handleDrop">
+
+                <div class="image-upload-content"
+                     data-action="click->image-upload#handleClick">
+
+                    <div class="image-upload-icon" data-image-upload-target="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z"/>
+                            <path d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                        </svg>
+                    </div>
+
+                    <div class="image-upload-text">
+                        {{ form_label(form.image, 'Перетащите изображение сюда', {'label_attr': {
+                            'class': 'image-upload-label'
+                        }})}}
+                        <p class="image-upload-subtitle">или нажмите для выбора файла</p>
+                        <p class="image-upload-hint">PNG, JPG, GIF, WebP до 5MB</p>
+                    </div>
+                </div>
+
+                {{ form_widget(form.image, {'attr': {
+                    'class': 'image-upload-input',
+                    'data-image-upload-target': 'input'
+                }}) }}
+
+                <div class="image-upload-loader" data-image-upload-target="loader">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Загрузка...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="image-upload-info" data-image-upload-target="info"></div>
+            <div class="image-upload-preview mt-2" data-image-upload-target="preview"></div>
+            <div class="image-upload-errors" data-image-upload-target="errors"></div>
+        </div>
+
+        <div class="form-text small text-muted">
+            Рекомендуемый размер: 800×600px. Максимальный вес: 5MB.
         </div>
     </div>
-    <div class="mb-3 form-item">
-        <div class="d-flex gap-2">
-            <div>
-                {{ form_widget(form.submit, {'attr':{class: 'btn btn-primary'},'label':'Создать'}) }}
-            </div>
-            <div>
-                {% if product.id %}
-                <form method="post" action="{{ path('admin_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Вы дейстивительно хотите удалить этот продукт?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
-                    <button class="btn btn-danger">Удалить</button>
-                </form>
-                {% endif %}
 
+    <div class="form-item mb-3">
+        {{ form_label(form.short_description ,'Краткое описание', {'label_attr':{'class': 'form-label'}}) }}
+        {{ form_widget(form.short_description, {'attr':{
+            'class': 'form-control',
+            'placeholder': 'Краткое описание для карточек товаров...',
+            'rows': '3',
+            'data-length': '500'
+        }}) }}
+        <div class="form-text small text-muted mt-1">
+            <span class="char-count">0</span>/500 символов
+        </div>
+        {% if form_errors(form.short_description) %}
+            <div class="alert alert-danger mt-2" role="alert">
+                {{ form_errors(form.short_description) }}
             </div>
+        {% endif %}
+    </div>
+
+    <div class="form-item mb-3">
+        {{ form_label(form.description ,'Полное описание', {'label_attr':{'class': 'form-label'}}) }}
+        {{ form_widget(form.description, {'attr':{
+            'class': 'form-control description',
+            'placeholder': 'Подробное описание товара...',
+            'rows':'5'
+        }}) }}
+        {% if form_errors(form.description) %}
+            <div class="alert alert-danger mt-2" role="alert">
+                {{ form_errors(form.description) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-item mb-3">
+        {{ form_label(form.category_id ,'Категория', {'label_attr':{'class': 'form-label required'}}) }}
+        {{ form_widget(form.category_id, {'attr':{'class': 'form-select'}}) }}
+        {% if form_errors(form.category_id) %}
+            <div class="alert alert-danger mt-2" role="alert">
+                {{ form_errors(form.category_id) }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-item mb-4">
+        <div class="form-check form-switch">
+            {{ form_widget(form.is_active, {'attr':{
+                'class': 'form-check-input',
+                'id': 'product_active'
+            }}) }}
+            {{ form_label(form.is_active,'Активный товар', {'label_attr': {
+                'class': 'form-check-label',
+                'for': 'product_active'
+            }}) }}
+        </div>
+        <div class="form-text small text-muted mt-1">
+            Неактивные товары не отображаются на сайте
+        </div>
+    </div>
+
+    <div class="form-item mb-0">
+        <div class="d-flex gap-2">
+            <div class="flex-grow-1">
+                {{ form_widget(form.submit, {
+                    'attr': {'class': 'btn btn-primary px-4'},
+                    'label': product.id ? 'Сохранить изменения' : 'Создать продукт'
+                }) }}
+            </div>
+
+            {% if product.id %}
+                <div>
+                    <button type="button" class="btn btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal">
+                        Удалить
+                    </button>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
+<!-- Модальное окно подтверждения удаления -->
+{% if product.id %}
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title">Подтверждение удаления</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы действительно хотите удалить продукт <strong>"{{ product.title }}"</strong>?</p>
+                    <p class="text-danger small mb-0">Это действие нельзя отменить.</p>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <form method="post" action="{{ path('admin_product_delete', {'id': product.id}) }}" class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- JavaScript для счетчиков символов -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Счетчики символов
+        document.querySelectorAll('input[data-length], textarea[data-length]').forEach(input => {
+            const maxLength = input.getAttribute('data-length');
+            const counter = input.closest('.form-item').querySelector('.char-count');
+
+            if (counter) {
+                // Обновляем счетчик
+                function updateCounter() {
+                    counter.textContent = input.value.length;
+
+                    // Меняем цвет при приближении к лимиту
+                    if (input.value.length > maxLength * 0.9) {
+                        counter.classList.add('text-danger');
+                        counter.classList.remove('text-muted');
+                    } else {
+                        counter.classList.remove('text-danger');
+                        counter.classList.add('text-muted');
+                    }
+                }
+
+                // Инициализация
+                updateCounter();
+
+                // Слушаем изменения
+                input.addEventListener('input', updateCounter);
+            }
+        });
+
+        // Автогенерация slug из title
+        const titleField = document.getElementById('{{ form.title.vars.id }}');
+        const slugField = document.getElementById('{{ form.slug.vars.id }}');
+
+        if (titleField && slugField) {
+            titleField.addEventListener('blur', function() {
+                if (!slugField.value.trim()) {
+                    const slug = this.value
+                        .toLowerCase()
+                        .replace(/[^\w\s-]/g, '')
+                        .replace(/\s+/g, '-')
+                        .replace(/--+/g, '-')
+                        .trim();
+                    slugField.value = slug;
+
+                    // Обновляем счетчик slug
+                    const slugCounter = slugField.closest('.form-item').querySelector('.char-count');
+                    if (slugCounter) {
+                        slugCounter.textContent = slug.length;
+                    }
+                }
+            });
+        }
+    });
+</script>

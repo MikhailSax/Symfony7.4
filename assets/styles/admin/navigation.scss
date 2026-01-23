@@ -1,0 +1,92 @@
+// assets/styles/components/_admin-nav.scss
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    // Кнопки аккордеона
+    .btn-toggle {
+        color: #212529;
+        background-color: transparent;
+        transition: all 0.2s ease;
+
+        &:hover, &:focus {
+            background-color: rgba(220, 53, 69, 0.08);
+            color: #dc3545;
+
+            i:first-child {
+                color: #dc3545;
+            }
+        }
+
+        // Стрелка
+        .transition-rotate {
+            transition: transform 0.3s ease;
+        }
+
+        // Стрелка при развернутом состоянии
+        &[aria-expanded="true"] {
+            .transition-rotate {
+                transform: rotate(180deg);
+            }
+        }
+
+        // Стрелка при свернутом состоянии
+        &[aria-expanded="false"] {
+            border-bottom: 1px solid #dee2e6;
+        }
+    }
+
+    // Содержимое аккордеона
+    .collapse {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    // Ссылки внутри аккордеона
+    .list-group-item {
+        border-radius: 0;
+        transition: all 0.2s ease;
+
+        &:hover:not(.active) {
+            background-color: rgba(220, 53, 69, 0.08);
+            color: #dc3545;
+
+            i {
+                color: #dc3545;
+            }
+        }
+
+        &.active {
+            background-color: #dc3545;
+            color: white;
+            border-color: #dc3545;
+
+            i {
+                color: white;
+            }
+
+            .badge {
+                background-color: white !important;
+                color: #dc3545 !important;
+            }
+        }
+    }
+
+    // Бейджи
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+        font-weight: 500;
+    }
+
+    // Кнопка "На сайт"
+    .btn-outline-danger {
+        border-width: 2px;
+
+        &:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+    }
+}
