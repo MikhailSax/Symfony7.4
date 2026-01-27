@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\ProductPrice;
 use App\Form\ProductPriceType;
@@ -17,20 +18,23 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProductController extends AbstractController
 {
     #[Route(name: 'index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository, Request $request): Response
+    public function index(Request $request,EntityManagerInterface $entityManager): Response
     {
         $title = 'Список продуктов';
         $query = $request->query->all();
+        $products = $entityManager->getRepository(Product::class);
+        $categories = $entityManager->getRepository(Category::class)->findAll();
 
         if (isset($query['category'])) {
-            return $this->render('product/index.html.twig', [
-                'products' => $productRepository->findByCategory((int)$query['category']),
-                'title' => $title,
-            ]);
+            $products = $products->findByCategory($query['category']);
+        } else {
+            $products = $products->findAll();
         }
+
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'products' => $products,
             'title' => $title,
+            'categories' => $categories,
         ]);
     }
 

@@ -44,8 +44,9 @@ class ProductRepository extends ServiceEntityRepository
     public function findByCategory(int $id): array
     {
         return $this->createQueryBuilder('p')
-            ->where('p.category = :id')
+            ->where('p.category_id = :id')
             ->setParameter('id', $id)
+            ->orderBy('p.title', 'ASC')
             ->getQuery()
             ->getResult();
     }

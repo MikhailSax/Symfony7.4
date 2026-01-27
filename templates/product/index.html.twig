@@ -17,10 +17,25 @@
             </div>
         {% endif %}
 
-        <div class="header-actions">
-            <a href="{{ path('admin_product_create') }}" class="btn btn-primary">
+        <div class="header-actions d-flex align-items-center gap-3">
+            <form action="" method="get" class="d-flex align-items-center gap-2">
+                <div class="input-group input-group-sm" style="width: 220px;">
+            <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-filter"></i>
+            </span>
+                    <select name="category" class="form-select form-select-sm border-start-0 ps-0">
+                        <option value="">Все категории</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit">Применить</button>
+            </form>
+
+            <a href="{{ path('admin_product_create') }}" class="btn btn-primary btn-sm d-flex align-items-center gap-2">
                 <i class="bi bi-plus-lg"></i>
-                Добавить товар
+                <span>Добавить товар</span>
             </a>
         </div>
     </div>
