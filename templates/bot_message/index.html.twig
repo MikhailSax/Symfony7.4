@@ -1,0 +1,100 @@
+{% extends 'admin.html.twig' %}
+{% set route = app.request.attributes.get('_route') %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <!-- Заголовок страницы -->
+    <div class="admin-page-header">
+        <div class="header-content">
+            <h1>{{ title }}</h1>
+            <p class="page-subtitle">{{ description }}</p>
+        </div>
+
+        {% if errorMessage is defined %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ errorMessage }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Карточка с таблицей -->
+    <div class="admin-table-card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th>username</th>
+                        <th>Имя</th>
+                        <th>Фамилия</th>
+                        <th>Обращение</th>
+                        <th>Телефон</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for message in messages %}
+                        <tr data-id="{{ message.id }}">
+                            <td class="entity-id" data-label="ID">#{{ message.id }}</td>
+
+
+                            <td data-label="user_name">
+                                <span class="">{{ message.userName }}</span>
+                            </td>
+
+                            <td class="entity-description" data-label="Категория">
+                                <span class="text-truncate-2">{{ message.userFirstName }}</span>
+                            </td>
+
+                            <td data-label="Продукт">
+                             <span class="badge bg-light">
+                                        {{ message.userLastName }}
+                             </span>
+                            </td>
+                            <td data-label="Продукт">
+                             <span class="badge bg-light">
+                                        {{ message.message }}
+                             </span>
+                            </td>
+                            <td data-label="Продукт">
+                             <span class="badge bg-light">
+                                        {{ message.phone }}
+                             </span>
+                            </td>
+
+                           <td>
+                               <form method="post"
+                                     action="{{ path('admin_bot_message_delete', {id: message.id}) }}"
+                                     class="d-inline"
+                                     onsubmit="return confirm('Удалить товар «{{ message.id }}»?');">
+                                   <input type="hidden" name="_token"
+                                          value="{{ csrf_token('delete' ~ message.id) }}">
+                                   <button type="submit"
+                                           class="btn btn-outline-danger"
+                                           title="Удалить">
+                                       <i class="bi bi-trash"></i>
+                                   </button>
+                               </form>
+                           </td>
+                        </tr>
+                    {% else %}
+                        <tr class="empty-row">
+                            <td colspan="12">
+                                <div class="empty-state">
+                                    <div class="empty-icon">
+                                        <i class="bi bi-inbox"></i>
+                                    </div>
+                                    <p class="empty-text">Обращений с телеграмма пока нет</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

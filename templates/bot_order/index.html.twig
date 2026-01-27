@@ -1,0 +1,80 @@
+{% extends 'admin.html.twig' %}
+{% set route = app.request.attributes.get('_route') %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<!-- Заголовок страницы -->
+<div class="admin-page-header">
+    <div class="header-content">
+        <h1>{{ title }}</h1>
+        <p class="page-subtitle">{{ description }}</p>
+    </div>
+
+    {% if errorMessage is defined %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ errorMessage }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Карточка с таблицей -->
+<div class="admin-table-card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th style="width: 80px;">ID</th>
+                    <th>telegram_id</th>
+                    <th>username</th>
+                    <th>Категория</th>
+                    <th>Продукт</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for order in orders %}
+                    <tr data-id="{{ order.id }}">
+                        <td class="entity-id" data-label="ID">#{{ order.id }}</td>
+
+                        <td data-label="Название">
+                            <div class="entity-title">
+                                <a href="#">
+                                    {{ order.userId }}
+                                </a>
+                            </div>
+                        </td>
+
+                        <td data-label="user_name">
+                            <span class="">{{ order.username }}</span>
+                        </td>
+
+                        <td class="entity-description" data-label="Категория">
+                            <span class="text-truncate-2">{{ order.category }}</span>
+                        </td>
+
+                        <td data-label="Продукт">
+                             <span class="badge bg-light">
+                                        {{ order.task }}
+                             </span>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr class="empty-row">
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="bi bi-inbox"></i>
+                                </div>
+                                <p class="empty-text">Заказов с телеграмма пока нет</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
