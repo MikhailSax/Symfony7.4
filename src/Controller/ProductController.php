@@ -13,13 +13,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('admin/product',name: 'admin_product_')]
+#[Route('admin/product', name: 'admin_product_')]
 final class ProductController extends AbstractController
 {
     #[Route(name: 'index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository): Response
+    public function index(ProductRepository $productRepository, Request $request): Response
     {
         $title = 'Список продуктов';
+        $query = $request->query->all();
+
+        if (isset($query['category'])) {
+            return $this->render('product/index.html.twig', [
+                'products' => $productRepository->findByCategory((int)$query['category']),
+                'title' => $title,
+            ]);
+        }
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findAll(),
             'title' => $title,
@@ -85,7 +93,7 @@ final class ProductController extends AbstractController
     #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $product->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($product);
             $entityManager->flush();
         }

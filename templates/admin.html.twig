@@ -31,26 +31,5 @@
             </div>
         </main>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM загружен');
-
-            // Проверяем, что Stimulus загружен
-            if (typeof window.Stimulus !== 'undefined') {
-                console.log('✅ Stimulus загружен');
-                console.log('Приложение:', window.Stimulus.application);
-
-                // Проверяем контроллеры
-                const controllers = window.Stimulus.application.controllers;
-                console.log('Контроллеры:', controllers.length);
-
-                controllers.forEach(controller => {
-                    console.log('Контроллер:', controller.identifier);
-                });
-            } else {
-                console.log('❌ Stimulus не загружен');
-            }
-        });
-    </script>
     </body>
 </html>

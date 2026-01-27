@@ -40,4 +40,13 @@ class ProductRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findByCategory(int $id): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.category = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
 }
