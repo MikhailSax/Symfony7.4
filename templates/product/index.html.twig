@@ -82,9 +82,9 @@
                             </td>
 
                             <td data-label="Категория">
-                                {% if product.categoryId %}
+                                {% if product.category %}
                                     <span class="badge bg-light">
-                                        {{ product.categoryId.title }}
+                                        {{ product.category.title }}
                                     </span>
                                 {% else %}
                                     <span class="text-muted">—</span>
@@ -135,39 +135,39 @@
             </div>
         </div>
 
-        <!-- Пагинация (если нужно) -->
-        {% if products|length > 10 %}
-            <div class="pagination-container d-flex justify-content-between align-items-center">
-                <div class="pagination-info">
-                    Показано {{ products|length }} из {{ totalCount ?? products|length }} товаров
-                </div>
-                <nav aria-label="Навигация по страницам">
-                    <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
-                            <a class="page-link"
-                               href="{{ path(route, {page: currentPage - 1}) }}"
-                               tabindex="-1">
-                                Назад
-                            </a>
-                        </li>
-                        {% for page in 1..totalPages %}
-                            <li class="page-item {% if page == currentPage %}active{% endif %}">
-                                <a class="page-link" href="{{ path(route, {page: page}) }}">
-                                    {{ page }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                        <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
-                            <a class="page-link"
-                               href="{{ path(route, {page: currentPage + 1}) }}">
-                                Вперед
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        {% endif %}
-    </div>
+{#        <!-- Пагинация (если нужно) -->#}
+{#        {% if products|length > 10 %}#}
+{#            <div class="pagination-container d-flex justify-content-between align-items-center">#}
+{#                <div class="pagination-info">#}
+{#                    Показано {{ products|length }} из {{ totalCount ?? products|length }} товаров#}
+{#                </div>#}
+{#                <nav aria-label="Навигация по страницам">#}
+{#                    <ul class="pagination pagination-sm mb-0">#}
+{#                        <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">#}
+{#                            <a class="page-link"#}
+{#                               href="{{ path(route, {page: currentPage - 1}) }}"#}
+{#                               tabindex="-1">#}
+{#                                Назад#}
+{#                            </a>#}
+{#                        </li>#}
+{#                        {% for page in 1..totalPages %}#}
+{#                            <li class="page-item {% if page == currentPage %}active{% endif %}">#}
+{#                                <a class="page-link" href="{{ path(route, {page: page}) }}">#}
+{#                                    {{ page }}#}
+{#                                </a>#}
+{#                            </li>#}
+{#                        {% endfor %}#}
+{#                        <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">#}
+{#                            <a class="page-link"#}
+{#                               href="{{ path(route, {page: currentPage + 1}) }}">#}
+{#                                Вперед#}
+{#                            </a>#}
+{#                        </li>#}
+{#                    </ul>#}
+{#                </nav>#}
+{#            </div>#}
+{#        {% endif %}#}
+{#    </div>#}
 
     <!-- JavaScript для tooltips -->
     <script>

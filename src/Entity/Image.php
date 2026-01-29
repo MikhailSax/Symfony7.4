@@ -15,13 +15,8 @@ class Image
 
     #[ORM\Column(length: 255)]
     private ?string $path = null;
-
-    #[ORM\ManyToOne(inversedBy: 'article')]
-    private ?Category $category_id = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $article = null;
-
     #[ORM\ManyToOne(inversedBy: 'image_id')]
     private ?Product $product = null;
 
@@ -42,17 +37,6 @@ class Image
         return $this;
     }
 
-    public function getCategoryId(): ?Category
-    {
-        return $this->category_id;
-    }
-
-    public function setCategoryId(?Category $category_id): static
-    {
-        $this->category_id = $category_id;
-
-        return $this;
-    }
 
     public function getArticle(): ?string
     {

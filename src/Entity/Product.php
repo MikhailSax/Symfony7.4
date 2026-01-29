@@ -5,79 +5,98 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Attribute\Groups;
-use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('product:read')]
+    #[Groups(['product:read'])]
     private ?int $id = null;
-
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
-    #[Groups('product:read')]
+    #[Groups(['product:read','product:write'])]
     private ?string $title = null;
 
     #[Assert\NotBlank]
-    #[Assert\Length(min: 30, max: 1000)]
-    #[ORM\Column(length: 255)]
-    #[Groups('product:read')]
+    #[Assert\Length(min: 30, max: 500)]
+    #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['product:read','product:write'])]
     private ?string $description = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 10, max: 255)]
     #[ORM\Column(length: 255)]
-    #[Groups('product:read')]
-    private ?string $short_description = null;
+    #[Groups(['product:read','product:write'])]
+    private ?string $shortDescription = null;
 
     #[Assert\NotBlank]
-    #[ORM\Column(length: 255)]
-    #[Groups('product:read')]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['product:read','product:write'])]
     private ?string $slug = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[Groups('product:read')]
-    private ?Category $category_id = null;
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['product:read','product:write'])]
+    private ?Category $category = null;
 
     /**
      * @var Collection<int, Image>
      */
-    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'product')]
-    private Collection $image;
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $imagePromo = null;
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'product', cascade: ['persist','remove'])]
+    private Collection $images;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    #[Groups(['product:read'])]
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updated_at = null;
+    #[Groups(['product:read'])]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     /**
      * @var Collection<int, ProductProperty>
      */
-    #[ORM\OneToMany(targetEntity: ProductProperty::class, mappedBy: 'product_id')]
+    #[ORM\OneToMany(targetEntity: ProductProperty::class, mappedBy: 'product')]
     private Collection $productProperties;
 
     /**
      * @var Collection<int, ProductPrice>
      */
-    #[ORM\OneToMany(targetEntity: ProductPrice::class, mappedBy: 'product_id')]
+    #[ORM\OneToMany(targetEntity: ProductPrice::class, mappedBy: 'product')]
     private Collection $productPrices;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $is_active = null;
+    private ?bool $isActive = null;
 
     public function __construct()
     {
-        $this->image = new ArrayCollection();
+        $this->images = new ArrayCollection();
         $this->productProperties = new ArrayCollection();
         $this->productPrices = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -90,10 +109,9 @@ class Product
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): self
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -102,22 +120,20 @@ class Product
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(string $description): self
     {
         $this->description = $description;
-
         return $this;
     }
 
     public function getShortDescription(): ?string
     {
-        return $this->short_description;
+        return $this->shortDescription;
     }
 
-    public function setShortDescription(string $short_description): static
+    public function setShortDescription(string $shortDescription): self
     {
-        $this->short_description = $short_description;
-
+        $this->shortDescription = $shortDescription;
         return $this;
     }
 
@@ -126,77 +142,58 @@ class Product
         return $this->slug;
     }
 
-    public function setSlug(string $slug): static
+    public function setSlug(string $slug): self
     {
         $this->slug = $slug;
-
         return $this;
     }
 
-    public function getCategoryId(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->category_id;
+        return $this->category;
     }
 
-    public function setCategoryId(?Category $category_id): static
+    public function setCategory(?Category $category): self
     {
-        $this->category_id = $category_id;
-
+        $this->category = $category;
         return $this;
     }
 
     /**
      * @return Collection<int, Image>
      */
-    public function getImage(): Collection
+    public function getImages(): Collection
     {
-        return $this->image;
+        return $this->images;
     }
 
-    public function addImageId(Image $imageId): static
+    public function addImage(Image $image): self
     {
-        if (!$this->image->contains($imageId)) {
-            $this->image->add($imageId);
-            $imageId->setProduct($this);
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setProduct($this);
         }
-
         return $this;
     }
 
-    public function removeImageId(Image $imageId): static
+    public function removeImage(Image $image): self
     {
-        if ($this->image->removeElement($imageId)) {
-            // set the owning side to null (unless already changed)
-            if ($imageId->getProduct() === $this) {
-                $imageId->setProduct(null);
+        if ($this->images->removeElement($image)) {
+            if ($image->getProduct() === $this) {
+                $image->setProduct(null);
             }
         }
-
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
+        return $this->createdAt;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
+        return $this->updatedAt;
     }
 
     /**
@@ -207,28 +204,6 @@ class Product
         return $this->productProperties;
     }
 
-    public function addProductProperty(ProductProperty $productProperty): static
-    {
-        if (!$this->productProperties->contains($productProperty)) {
-            $this->productProperties->add($productProperty);
-            $productProperty->setProductId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductProperty(ProductProperty $productProperty): static
-    {
-        if ($this->productProperties->removeElement($productProperty)) {
-            // set the owning side to null (unless already changed)
-            if ($productProperty->getProductId() === $this) {
-                $productProperty->setProductId(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, ProductPrice>
      */
@@ -237,37 +212,24 @@ class Product
         return $this->productPrices;
     }
 
-    public function addProductPrice(ProductPrice $productPrice): static
-    {
-        if (!$this->productPrices->contains($productPrice)) {
-            $this->productPrices->add($productPrice);
-            $productPrice->setProductId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductPrice(ProductPrice $productPrice): static
-    {
-        if ($this->productPrices->removeElement($productPrice)) {
-            // set the owning side to null (unless already changed)
-            if ($productPrice->getProductId() === $this) {
-                $productPrice->setProductId(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isActive(): ?bool
     {
-        return $this->is_active;
+        return $this->isActive;
     }
 
-    public function setIsActive(?bool $is_active): static
+    public function setIsActive(?bool $isActive): self
     {
-        $this->is_active = $is_active;
+        $this->isActive = $isActive;
+        return $this;
+    }
 
+    public function getImagePromo(): ?string
+    {
+        return $this->imagePromo;
+    }
+    public function setImagePromo(?string $imagePromo): self
+    {
+        $this->imagePromo = $imagePromo;
         return $this;
     }
 }

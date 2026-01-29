@@ -1,14 +1,11 @@
 parameters:
     api_access_token: '%env(API_ACCESS_TOKEN)%'
-
+    uploads_directory: '%kernel.project_dir%\public\uploads\products\'
+    asset_directory: ''
 services:
     _defaults:
         autowire: true
         autoconfigure: true
-
-    App\Service\FileUploader:
-        arguments:
-            $targetDirectory: '%product_image_directory%'
 
     App\EventSubscriber\ApiTokenSubscriber:
         arguments:
@@ -16,3 +13,13 @@ services:
 
     App\:
         resource: '../src/'
+        exclude: '../src/{DependencyInjection,Entity,Kernel.php}'
+
+    App\Service\Files\UploadFileService:
+        arguments:
+            $targetDirectory: '%uploads_directory%'
+
+
+
+
+

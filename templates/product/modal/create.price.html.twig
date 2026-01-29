@@ -42,51 +42,53 @@
                 </thead>
 
                 <tbody>
-                {% for price in prices %}
-                    <tr>
-                        <td class="entity-id" data-label="ID">{{ price.id }}</td>
+                {% if prices is not empty %}
+                    {% for price in prices %}
+                        <tr>
+                            <td class="entity-id" data-label="ID">{{ price.id }}</td>
 
-                        <td data-label="Название">
-                            <div class="entity-title">
-                                {{ price.name }}
-                            </div>
-                        </td>
+                            <td data-label="Название">
+                                <div class="entity-title">
+                                    {{ price.name }}
+                                </div>
+                            </td>
 
-                        <td data-label="Цена за шт.">
-                            <span class="badge bg-light">{{ price.price|number_format(2, '.', ' ') }} RUB</span>
-                        </td>
+                            <td data-label="Цена за шт.">
+                                <span class="badge bg-light">{{ price.price|number_format(2, '.', ' ') }} RUB</span>
+                            </td>
 
-                        <td data-label="Количество">
-                            {{ price.quantity }} шт.
-                        </td>
+                            <td data-label="Количество">
+                                {{ price.quantity }} шт.
+                            </td>
 
-                        <td class="entity-actions text-end" data-label="Действия">
-                            <div class="btn-group" role="group">
-                                <button type="button"
-                                        class="btn btn-outline-primary edit-price-btn"
-                                        data-price-id="{{ price.id }}"
-                                        data-price-name="{{ price.name }}"
-                                        data-price-quantity="{{ price.quantity }}"
-                                        data-price-price="{{ price.price }}"
-                                        title="Редактировать">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-
-                                <form method="post"
-                                      action="{{ path('product_price_delete', {id: price.id}) }}"
-                                      class="d-inline"
-                                      onsubmit="return confirm('Удалить цену «{{ price.name }}»?');">
-                                    <input type="hidden" name="_token"
-                                           value="{{ csrf_token('delete_price' ~ price.id) }}">
-                                    <button type="submit"
-                                            class="btn btn-outline-danger"
-                                            title="Удалить">
-                                        <i class="bi bi-trash"></i>
+                            <td class="entity-actions text-end" data-label="Действия">
+                                <div class="btn-group" role="group">
+                                    <button type="button"
+                                            class="btn btn-outline-primary edit-price-btn"
+                                            data-price-id="{{ price.id }}"
+                                            data-price-name="{{ price.name }}"
+                                            data-price-quantity="{{ price.quantity }}"
+                                            data-price-price="{{ price.price }}"
+                                            title="Редактировать">
+                                        <i class="bi bi-pencil"></i>
                                     </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
+
+                                    <form method="post"
+                                          action="{{ path('product_price_delete', {id: price.id}) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Удалить цену «{{ price.name }}»?');">
+                                        <input type="hidden" name="_token"
+                                               value="{{ csrf_token('delete_price' ~ price.id) }}">
+                                        <button type="submit"
+                                                class="btn btn-outline-danger"
+                                                title="Удалить">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
                 {% else %}
                     <tr class="empty-row">
                         <td colspan="5">
@@ -96,14 +98,14 @@
                                 </div>
                                 <p class="empty-text">Цен для этого продукта пока нет</p>
                                 <div class="empty-action">
-                                    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#createPriceModal">
-                                        Добавить первую цену
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPriceModal">
+                                        <i class="bi bi-plus-circle me-1"></i>Добавить первую цену
                                     </button>
                                 </div>
                             </div>
                         </td>
                     </tr>
-                {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
         </div>

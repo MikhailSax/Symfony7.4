@@ -96,10 +96,10 @@ export default class extends Controller {
             // Показываем информацию о файле
             this.showFileInfo(file);
 
-            // Если есть uploadUrl, загружаем на сервер
-            if (this.uploadUrlValue) {
-                await this.uploadFile(file);
-            }
+            // // Если есть uploadUrl, загружаем на сервер
+            // if (this.uploadUrlValue) {
+            //     await this.uploadFile(file);
+            // }
 
             // Убираем лоадер
             hideLoader(this.loaderTarget);
@@ -201,27 +201,27 @@ export default class extends Controller {
     }
 
     // Загрузка файла на сервер (если нужно)
-    async uploadFile(file) {
-        if (!this.uploadUrlValue) return;
-
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const response = await fetch(this.uploadUrlValue, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Ошибка загрузки файла на сервер');
-        }
-
-        const result = await response.json();
-        return result;
-    }
+    // async uploadFile(file) {
+    //     if (!this.uploadUrlValue) return;
+    //
+    //     const formData = new FormData();
+    //     formData.append('image', file);
+    //
+    //     const response = await fetch(this.uploadUrlValue, {
+    //         method: 'POST',
+    //         body: formData,
+    //         headers: {
+    //             'X-Requested-With': 'XMLHttpRequest'
+    //         }
+    //     });
+    //
+    //     if (!response.ok) {
+    //         throw new Error('Ошибка загрузки файла на сервер');
+    //     }
+    //
+    //     const result = await response.json();
+    //     return result;
+    // }
 
     // Удалить файл
     removeFile() {
