@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Collection;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -16,38 +17,22 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    //    /**
-    //     * @return Product[] Returns an array of Product objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+   public function searchProducts(string $search, int $category): array
+   {
+       if($category === 0) {
+           return $this->createQueryBuilder('p')
+               ->where('p.title LIKE :search')
+               ->setParameter('search', '%'.$search.'%')
+               ->getQuery()
+               ->getResult();
+       }
 
-    //    public function findOneBySomeField($value): ?Product
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
-
-    public function findByCategory(int $id): array
-    {
-        return $this->createQueryBuilder('p')
-            ->where('p.category_id = :id')
-            ->setParameter('id', $id)
-            ->orderBy('p.title', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
+       return $this->createQueryBuilder('p')
+           ->where('p.category = :category')
+           ->setParameter('category', $category)
+           ->andwhere('p.title LIKE :search')
+           ->setParameter('search', '%'.$search.'%')
+           ->getQuery()
+           ->getResult();
+   }
 }

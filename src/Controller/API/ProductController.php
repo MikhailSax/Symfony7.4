@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 
-#[Route('api/v1/products/',name: 'api_products', methods: ['GET'])]
+#[Route('api/v1/category/',name: 'api_products', methods: ['GET'])]
 class ProductController extends AbstractController
 {
     #[Route('all',name: 'index', methods: ['GET'])]

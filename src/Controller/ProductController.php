@@ -27,11 +27,13 @@ final class ProductController extends AbstractController
         $products = $entityManager->getRepository(Product::class);
         $categories = $entityManager->getRepository(Category::class)->findAll();
 
-        if (isset($query['category'])) {
-            $products = $products->findByCategory($query['category']);
+
+        if(!empty($query['search']) || !empty($query['category'])) {
+            $products = $products->searchProducts($query['search'], $query['category']);
         } else {
             $products = $products->findAll();
         }
+
 
         return $this->render('product/index.html.twig', [
             'products' => $products,

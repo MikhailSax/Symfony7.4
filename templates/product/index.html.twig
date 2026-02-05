@@ -3,175 +3,181 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    <!-- Заголовок страницы -->
-    <div class="admin-page-header">
-        <div class="header-content">
-            <h1>{{ title }}</h1>
-            <p class="page-subtitle">Управление товарами каталога</p>
+<!-- Заголовок страницы -->
+<div class="admin-page-header">
+    <div class="header-content">
+        <h1>{{ title }}</h1>
+        <p class="page-subtitle">Управление товарами каталога</p>
+    </div>
+
+    {% if errorMessage is defined %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ errorMessage }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    {% endif %}
 
-        {% if errorMessage is defined %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ errorMessage }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
+    <div class="header-actions d-flex align-items-center gap-3">
+        <a href="{{ path('admin_product_create') }}" class="btn btn-primary btn-sm d-flex align-items-center gap-2">
+            <i class="bi bi-plus-lg"></i>
+            <span>Добавить товар</span>
+        </a>
+    </div>
+</div>
 
-        <div class="header-actions d-flex align-items-center gap-3">
-            <form action="" method="get" class="d-flex align-items-center gap-2">
-                <div class="input-group input-group-sm" style="width: 220px;">
-            <span class="input-group-text bg-light border-end-0">
-                <i class="bi bi-filter"></i>
-            </span>
-                    <select name="category" class="form-select form-select-sm border-start-0 ps-0">
-                        <option value="">Все категории</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <button type="submit">Применить</button>
-            </form>
+<div class="d-flex justify-content-end gap-3 mt-3 mb-3">
+    <form action="{{ path('admin_product_index') }}" method="get" class="d-flex align-items-center gap-2">
+        <div class="input-group mb-3" style="margin-right: 10px">
+                <span class="input-group-text bg-white border-end-0" id="search-icon">
+                        <i class="bi bi-search"></i>
+                </span>
+            <input type="search" name="search" id="search_products" placeholder="поиск"
+                   class="form-control border-start-0">
+        </div>
+        <div class="input-group mb-3" style="width: 350px;">
+            <select name="category" class="form-select form-select-sm border-start-0 ps-0 text-center">
+                <option value="0">Все категории</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm d-flex align-items-center mb-3">Применить</button>
+    </form>
+</div>
 
-            <a href="{{ path('admin_product_create') }}" class="btn btn-primary btn-sm d-flex align-items-center gap-2">
-                <i class="bi bi-plus-lg"></i>
-                <span>Добавить товар</span>
-            </a>
+<!-- Карточка с таблицей -->
+<div class="admin-table-card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th style="width: 80px;">ID</th>
+                    <th>Название</th>
+                    <th>URL</th>
+                    <th>Описание</th>
+                    <th>Категория</th>
+                    <th class="text-end" style="width: 120px;">Действия</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for product in products %}
+                    <tr data-id="{{ product.id }}">
+                        <td class="entity-id" data-label="ID">#{{ product.id }}</td>
+
+                        <td data-label="Название">
+                            <div class="entity-title">
+                                <a href="{{ path('admin_product_edit',{id: product.id }) }}">
+                                    {{ product.title }}
+                                </a>
+                            </div>
+                        </td>
+
+                        <td data-label="URL">
+                            <span class="badge entity-slug">{{ product.slug }}</span>
+                        </td>
+
+                        <td class="entity-description" data-label="Описание">
+                            {% if product.shortDescription %}
+                                <span class="text-truncate-2">{{ product.shortDescription }}</span>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td data-label="Категория">
+                            {% if product.category %}
+                                <span class="badge bg-light">
+                                        {{ product.category.title }}
+                                    </span>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="entity-actions text-end" data-label="Действия">
+                            <div class="btn-group" role="group">
+                                <a href="{{ path('admin_product_edit', {id: product.id}) }}"
+                                   class="btn btn-outline-primary"
+                                   title="Редактировать">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post"
+                                      action="{{ path('admin_product_delete', {id: product.id}) }}"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Удалить товар «{{ product.title }}»?');">
+                                    <input type="hidden" name="_token"
+                                           value="{{ csrf_token('delete' ~ product.id) }}">
+                                    <button type="submit"
+                                            class="btn btn-outline-danger"
+                                            title="Удалить">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr class="empty-row">
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="bi bi-inbox"></i>
+                                </div>
+                                <p class="empty-text">Товаров пока нет</p>
+                                <div class="empty-action">
+                                    <a href="{{ path('admin_product_create') }}" class="btn btn-link">
+                                        Добавить первый товар
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Карточка с таблицей -->
-    <div class="admin-table-card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="admin-table">
-                    <thead>
-                    <tr>
-                        <th style="width: 80px;">ID</th>
-                        <th>Название</th>
-                        <th>URL</th>
-                        <th>Описание</th>
-                        <th>Категория</th>
-                        <th class="text-end" style="width: 120px;">Действия</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {% for product in products %}
-                        <tr data-id="{{ product.id }}">
-                            <td class="entity-id" data-label="ID">#{{ product.id }}</td>
-
-                            <td data-label="Название">
-                                <div class="entity-title">
-                                    <a href="{{ path('admin_product_edit',{id: product.id }) }}">
-                                        {{ product.title }}
-                                    </a>
-                                </div>
-                            </td>
-
-                            <td data-label="URL">
-                                <span class="badge entity-slug">{{ product.slug }}</span>
-                            </td>
-
-                            <td class="entity-description" data-label="Описание">
-                                {% if product.shortDescription %}
-                                    <span class="text-truncate-2">{{ product.shortDescription }}</span>
-                                {% else %}
-                                    <span class="text-muted">—</span>
-                                {% endif %}
-                            </td>
-
-                            <td data-label="Категория">
-                                {% if product.category %}
-                                    <span class="badge bg-light">
-                                        {{ product.category.title }}
-                                    </span>
-                                {% else %}
-                                    <span class="text-muted">—</span>
-                                {% endif %}
-                            </td>
-
-                            <td class="entity-actions text-end" data-label="Действия">
-                                <div class="btn-group" role="group">
-                                    <a href="{{ path('admin_product_edit', {id: product.id}) }}"
-                                       class="btn btn-outline-primary"
-                                       title="Редактировать">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form method="post"
-                                          action="{{ path('admin_product_delete', {id: product.id}) }}"
-                                          class="d-inline"
-                                          onsubmit="return confirm('Удалить товар «{{ product.title }}»?');">
-                                        <input type="hidden" name="_token"
-                                               value="{{ csrf_token('delete' ~ product.id) }}">
-                                        <button type="submit"
-                                                class="btn btn-outline-danger"
-                                                title="Удалить">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr class="empty-row">
-                            <td colspan="6">
-                                <div class="empty-state">
-                                    <div class="empty-icon">
-                                        <i class="bi bi-inbox"></i>
-                                    </div>
-                                    <p class="empty-text">Товаров пока нет</p>
-                                    <div class="empty-action">
-                                        <a href="{{ path('admin_product_create') }}" class="btn btn-link">
-                                            Добавить первый товар
-                                        </a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-{#        <!-- Пагинация (если нужно) -->#}
-{#        {% if products|length > 10 %}#}
-{#            <div class="pagination-container d-flex justify-content-between align-items-center">#}
-{#                <div class="pagination-info">#}
-{#                    Показано {{ products|length }} из {{ totalCount ?? products|length }} товаров#}
-{#                </div>#}
-{#                <nav aria-label="Навигация по страницам">#}
-{#                    <ul class="pagination pagination-sm mb-0">#}
-{#                        <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">#}
-{#                            <a class="page-link"#}
-{#                               href="{{ path(route, {page: currentPage - 1}) }}"#}
-{#                               tabindex="-1">#}
-{#                                Назад#}
-{#                            </a>#}
-{#                        </li>#}
-{#                        {% for page in 1..totalPages %}#}
-{#                            <li class="page-item {% if page == currentPage %}active{% endif %}">#}
-{#                                <a class="page-link" href="{{ path(route, {page: page}) }}">#}
-{#                                    {{ page }}#}
-{#                                </a>#}
-{#                            </li>#}
-{#                        {% endfor %}#}
-{#                        <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">#}
-{#                            <a class="page-link"#}
-{#                               href="{{ path(route, {page: currentPage + 1}) }}">#}
-{#                                Вперед#}
-{#                            </a>#}
-{#                        </li>#}
-{#                    </ul>#}
-{#                </nav>#}
-{#            </div>#}
-{#        {% endif %}#}
-{#    </div>#}
+    {#        <!-- Пагинация (если нужно) --> #}
+    {#        {% if products|length > 10 %} #}
+    {#            <div class="pagination-container d-flex justify-content-between align-items-center"> #}
+    {#                <div class="pagination-info"> #}
+    {#                    Показано {{ products|length }} из {{ totalCount ?? products|length }} товаров #}
+    {#                </div> #}
+    {#                <nav aria-label="Навигация по страницам"> #}
+    {#                    <ul class="pagination pagination-sm mb-0"> #}
+    {#                        <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}"> #}
+    {#                            <a class="page-link" #}
+    {#                               href="{{ path(route, {page: currentPage - 1}) }}" #}
+    {#                               tabindex="-1"> #}
+    {#                                Назад #}
+    {#                            </a> #}
+    {#                        </li> #}
+    {#                        {% for page in 1..totalPages %} #}
+    {#                            <li class="page-item {% if page == currentPage %}active{% endif %}"> #}
+    {#                                <a class="page-link" href="{{ path(route, {page: page}) }}"> #}
+    {#                                    {{ page }} #}
+    {#                                </a> #}
+    {#                            </li> #}
+    {#                        {% endfor %} #}
+    {#                        <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}"> #}
+    {#                            <a class="page-link" #}
+    {#                               href="{{ path(route, {page: currentPage + 1}) }}"> #}
+    {#                                Вперед #}
+    {#                            </a> #}
+    {#                        </li> #}
+    {#                    </ul> #}
+    {#                </nav> #}
+    {#            </div> #}
+    {#        {% endif %} #}
+    {#    </div> #}
 
     <!-- JavaScript для tooltips -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Инициализация tooltips Bootstrap 5
             if (typeof bootstrap !== 'undefined') {
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -185,7 +191,7 @@
                 if (form.action.includes('delete')) {
                     const button = form.querySelector('button[type="submit"]');
                     if (button) {
-                        button.addEventListener('click', function(e) {
+                        button.addEventListener('click', function (e) {
                             const row = this.closest('tr');
                             const entityName = row.querySelector('.entity-title a').textContent.trim();
                             if (!confirm(`Вы уверены, что хотите удалить «${entityName}»?\nЭто действие нельзя отменить.`)) {
@@ -199,12 +205,12 @@
             // Подсветка строк при наведении
             const rows = document.querySelectorAll('.admin-table tbody tr:not(.empty-row)');
             rows.forEach(row => {
-                row.addEventListener('mouseenter', function() {
+                row.addEventListener('mouseenter', function () {
                     this.style.transform = 'translateY(-2px)';
                     this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
                 });
 
-                row.addEventListener('mouseleave', function() {
+                row.addEventListener('mouseleave', function () {
                     this.style.transform = '';
                     this.style.boxShadow = '';
                 });
@@ -212,4 +218,4 @@
         });
     </script>
 
-{% endblock %}
+    {% endblock %}

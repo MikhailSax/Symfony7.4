@@ -7,9 +7,9 @@ services:
         autowire: true
         autoconfigure: true
 
-    App\EventSubscriber\ApiTokenSubscriber:
-        arguments:
-            $apiToken: '%env(API_TOKEN)%'
+#    App\EventSubscriber\ApiTokenSubscriber:
+#        arguments:
+#            $apiToken: '%env(API_TOKEN)%'
 
     App\:
         resource: '../src/'
