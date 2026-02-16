@@ -1,0 +1,37 @@
+{% extends 'admin.html.twig' %}
+{% block title %}Заказ #{{ order.id }}{% endblock %}
+{% block body %}
+    <div class="d-flex justify-content-between mb-3">
+        <h1>Заказ #{{ order.id }}</h1>
+        <a class="btn btn-outline-secondary" href="{{ path('admin_orders_index') }}">Назад</a>
+    </div>
+
+    <ul class="list-group mb-3">
+        <li class="list-group-item"><strong>Клиент:</strong> {{ order.client.email }}</li>
+        <li class="list-group-item"><strong>Статус:</strong> {{ statuses[order.status] }}</li>
+        <li class="list-group-item"><strong>Сумма:</strong> {{ order.totalPrice }} ₽</li>
+        <li class="list-group-item"><strong>Себестоимость:</strong> {{ order.materialCost }} ₽</li>
+        <li class="list-group-item"><strong>Комментарий:</strong> {{ order.comment ?: '—' }}</li>
+    </ul>
+
+    <h4>Позиции</h4>
+    <table class="table">
+        <thead><tr><th>Продукт</th><th>Кол-во</th><th>Цена</th></tr></thead>
+        <tbody>
+        {% for item in order.items %}
+            <tr>
+                <td>{{ item.product.title }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.linePrice }} ₽</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="3">Позиции пока не добавлены.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <form method="post" action="{{ path('admin_orders_delete', {id: order.id}) }}" onsubmit="return confirm('Удалить заказ?')">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ order.id) }}">
+        <button class="btn btn-outline-danger">Удалить заказ</button>
+    </form>
+{% endblock %}

@@ -88,6 +88,30 @@
             </div>
         </div>
 
+
+        <div class="mb-3">
+            <button class="btn btn-toggle w-100 text-start d-flex align-items-center p-2 rounded-0 border-0 border-bottom"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#w2pCollapse"
+                    aria-expanded="false"
+                    aria-controls="w2pCollapse">
+                <i class="bi bi-calculator me-2"></i>
+                <span class="fw-medium">Web-to-Print</span>
+                <i class="bi bi-chevron-down ms-auto transition-rotate"></i>
+            </button>
+
+            <div class="collapse" id="w2pCollapse">
+                <div class="list-group list-group-flush border-0">
+                    <a href="{{ path('admin_orders_index') }}" class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route starts with 'admin_orders_' ? 'active' : '' }}">Заказы CRM</a>
+                    <a href="{{ path('admin_orders_board') }}" class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route == 'admin_orders_board' ? 'active' : '' }}">Производство (Kanban)</a>
+                    <a href="{{ path('admin_pricing_rule_index') }}" class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route starts with 'admin_pricing_rule_' ? 'active' : '' }}">Формулы цен</a>
+                    <a href="{{ path('admin_product_attribute_index') }}" class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route starts with 'admin_product_attribute_' ? 'active' : '' }}">Атрибуты продуктов</a>
+                    <a href="{{ path('admin_product_attribute_value_index') }}" class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route starts with 'admin_product_attribute_value_' ? 'active' : '' }}">Значения атрибутов</a>
+                    <a href="{{ path('admin_file_asset_index') }}" class="list-group-item list-group-item-action border-0 px-4 py-2 {{ route starts with 'admin_file_asset_' ? 'active' : '' }}">Файлы макетов</a>
+                </div>
+            </div>
+        </div>
         <div class="mb-3">
             <button class="btn btn-toggle w-100 text-start d-flex align-items-center p-2 rounded-0 border-0 border-bottom"
                     type="button"

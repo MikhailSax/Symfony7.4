@@ -1,0 +1,41 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Заказы{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Заказы</h1>
+        <div>
+            <a class="btn btn-outline-secondary" href="{{ path('admin_orders_board') }}">Kanban</a>
+            <a class="btn btn-primary" href="{{ path('admin_orders_new') }}">Создать заказ</a>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <a href="{{ path('admin_orders_index') }}" class="btn btn-sm {{ currentStatus is empty ? 'btn-dark' : 'btn-outline-dark' }}">Все</a>
+        {% for code, label in statuses %}
+            <a href="{{ path('admin_orders_index', {status: code}) }}" class="btn btn-sm {{ currentStatus == code ? 'btn-dark' : 'btn-outline-dark' }}">{{ label }}</a>
+        {% endfor %}
+    </div>
+
+    <table class="table table-striped">
+        <thead><tr><th>ID</th><th>Клиент</th><th>Статус</th><th>Сумма</th><th>Прибыль</th><th></th></tr></thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.client.email }}</td>
+                <td>{{ statuses[order.status] }}</td>
+                <td>{{ order.totalPrice }} ₽</td>
+                <td>{{ order.profit|number_format(2, '.', ' ') }} ₽</td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-primary" href="{{ path('admin_orders_show', {id: order.id}) }}">Открыть</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ path('admin_orders_edit', {id: order.id}) }}">Изменить</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">Заказов пока нет.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

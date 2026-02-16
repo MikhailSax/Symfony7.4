@@ -1,0 +1,27 @@
+{% extends 'admin.html.twig' %}
+{% block title %}Производственная очередь{% endblock %}
+{% block body %}
+    <h1 class="mb-3">Производственная очередь (Kanban)</h1>
+    <div class="row g-3">
+        {% for col in columns %}
+            <div class="col-12 col-md-6 col-xl">
+                <div class="card h-100">
+                    <div class="card-header"><strong>{{ col.label }}</strong></div>
+                    <div class="card-body">
+                        {% for order in col.orders %}
+                            <div class="border rounded p-2 mb-2">
+                                <div>#{{ order.id }} — {{ order.client.email }}</div>
+                                <div class="small text-muted mb-2">{{ order.totalPrice }} ₽</div>
+                                <form method="post" action="{{ path('admin_orders_next_status', {id: order.id}) }}">
+                                    <button class="btn btn-sm btn-outline-primary">Следующий этап</button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="text-muted">Пусто</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

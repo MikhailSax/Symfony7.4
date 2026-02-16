@@ -1,0 +1,29 @@
+{% extends 'admin.html.twig' %}
+{% block title %}Значения атрибутов{% endblock %}
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Значения атрибутов</h1>
+        <a class="btn btn-primary" href="{{ path('admin_product_attribute_value_new') }}">Добавить значение</a>
+    </div>
+    <table class="table table-striped">
+        <thead><tr><th>Атрибут</th><th>Label</th><th>Value</th><th></th></tr></thead>
+        <tbody>
+        {% for value in values %}
+            <tr>
+                <td>{{ value.attribute.name }}</td>
+                <td>{{ value.label }}</td>
+                <td>{{ value.value }}</td>
+                <td class="text-end d-flex gap-1 justify-content-end">
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ path('admin_product_attribute_value_edit', {id: value.id}) }}">Изм.</a>
+                    <form method="post" action="{{ path('admin_product_attribute_value_delete', {id: value.id}) }}" onsubmit="return confirm('Удалить значение?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ value.id) }}">
+                        <button class="btn btn-sm btn-outline-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">Нет значений.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
