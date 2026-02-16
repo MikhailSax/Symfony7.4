@@ -1,5 +1,6 @@
 parameters:
     api_access_token: '%env(API_ACCESS_TOKEN)%'
+    telegram_bot_token: '%env(default::TELEGRAM_BOT_TOKEN)%'
     uploads_directory: '%kernel.project_dir%\public\uploads\products\'
     asset_directory: ''
 services:
@@ -19,6 +20,9 @@ services:
         arguments:
             $targetDirectory: '%uploads_directory%'
 
+    App\Service\API\BotService:
+        arguments:
+            $botToken: '%telegram_bot_token%'
 
 
 
