@@ -10,8 +10,8 @@
             <tr>
                 <th>Id</th>
                 <th>Value</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
+                <th>Продукт</th>
+                <th>Характеристика</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -20,8 +20,8 @@
             <tr>
                 <td>{{ product_property.id }}</td>
                 <td>{{ product_property.value }}</td>
-                <td>{{ product_property.createdAt ? product_property.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ product_property.updatedAt ? product_property.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ product_property.product ? product_property.product.title : '-' }}</td>
+                <td>{{ product_property.property ? product_property.property.name : '-' }}</td>
                 <td>
                     <a href="{{ path('product_property_show', {'id': product_property.id}) }}">show</a>
                     <a href="{{ path('product_property_edit', {'id': product_property.id}) }}">edit</a>
@@ -35,5 +35,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_product_property_new') }}">Cоздать новый</a>
+    <a href="{{ path('product_property_new') }}">Cоздать новый</a>
 {% endblock %}

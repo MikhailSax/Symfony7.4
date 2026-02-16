@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductPropertyRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ProductProperty
 {
     #[ORM\Id]
@@ -16,48 +17,63 @@ class ProductProperty
 
     #[Assert\NotBlank]
     #[ORM\ManyToOne(inversedBy: 'productProperties')]
-    private ?Product $product_id = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Product $product = null;
 
     #[Assert\NotBlank]
     #[ORM\ManyToOne(inversedBy: 'productProperties')]
-    private ?Properties $property_id = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Properties $property = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $value = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
-
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updated_at = null;
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $now = new \DateTimeImmutable();
+        $this->createdAt = $now;
+        $this->updatedAt = $now;
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getProductId(): ?Product
+    public function getProduct(): ?Product
     {
-        return $this->product_id;
+        return $this->product;
     }
 
-    public function setProductId(?Product $product_id): static
+    public function setProduct(?Product $product): static
     {
-        $this->product_id = $product_id;
+        $this->product = $product;
 
         return $this;
     }
 
-    public function getPropertyId(): ?Properties
+    public function getProperty(): ?Properties
     {
-        return $this->property_id;
+        return $this->property;
     }
 
-    public function setPropertyId(?Properties $property_id): static
+    public function setProperty(?Properties $property): static
     {
-        $this->property_id = $property_id;
+        $this->property = $property;
 
         return $this;
     }
@@ -76,25 +92,11 @@ class ProductProperty
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
+        return $this->createdAt;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
+        return $this->updatedAt;
     }
 }

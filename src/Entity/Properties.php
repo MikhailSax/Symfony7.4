@@ -23,7 +23,7 @@ class Properties
     /**
      * @var Collection<int, ProductProperty>
      */
-    #[ORM\OneToMany(targetEntity: ProductProperty::class, mappedBy: 'property_id')]
+    #[ORM\OneToMany(targetEntity: ProductProperty::class, mappedBy: 'property')]
     private Collection $productProperties;
 
     public function __construct()
@@ -60,7 +60,7 @@ class Properties
     {
         if (!$this->productProperties->contains($productProperty)) {
             $this->productProperties->add($productProperty);
-            $productProperty->setPropertyId($this);
+            $productProperty->setProperty($this);
         }
 
         return $this;
@@ -70,8 +70,8 @@ class Properties
     {
         if ($this->productProperties->removeElement($productProperty)) {
             // set the owning side to null (unless already changed)
-            if ($productProperty->getPropertyId() === $this) {
-                $productProperty->setPropertyId(null);
+            if ($productProperty->getProperty() === $this) {
+                $productProperty->setProperty(null);
             }
         }
 
