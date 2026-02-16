@@ -16,6 +16,8 @@ final class Version20260216050000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        $userTable = $this->resolveUserTable($schema);
+
         $orders = $schema->createTable('orders');
         $orders->addColumn('id', 'integer', ['autoincrement' => true]);
         $orders->addColumn('client_id', 'integer');
@@ -27,7 +29,9 @@ final class Version20260216050000 extends AbstractMigration
         $orders->addColumn('updated_at', 'datetime_immutable');
         $orders->setPrimaryKey(['id']);
         $orders->addIndex(['client_id'], 'IDX_ORDERS_CLIENT_ID');
-        $orders->addForeignKeyConstraint('user', ['client_id'], ['id'], ['onDelete' => 'CASCADE']);
+        if (null !== $userTable) {
+            $orders->addForeignKeyConstraint($userTable, ['client_id'], ['id'], ['onDelete' => 'CASCADE']);
+        }
 
         $orderItems = $schema->createTable('order_item');
         $orderItems->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -90,7 +94,22 @@ final class Version20260216050000 extends AbstractMigration
         $fileAsset->addIndex(['order_id'], 'IDX_FILE_ASSET_ORDER_ID');
         $fileAsset->addIndex(['uploaded_by_id'], 'IDX_FILE_ASSET_UPLOADED_BY_ID');
         $fileAsset->addForeignKeyConstraint('orders', ['order_id'], ['id'], ['onDelete' => 'SET NULL']);
-        $fileAsset->addForeignKeyConstraint('user', ['uploaded_by_id'], ['id'], ['onDelete' => 'SET NULL']);
+        if (null !== $userTable) {
+            $fileAsset->addForeignKeyConstraint($userTable, ['uploaded_by_id'], ['id'], ['onDelete' => 'SET NULL']);
+        }
+    }
+
+    private function resolveUserTable(Schema $schema): ?string
+    {
+        foreach (['user', 'app_user', 'users'] as $tableName) {
+            if ($schema->hasTable($tableName)) {
+                return $tableName;
+            }
+        }
+
+        $this->write('No user table found (`user`, `app_user`, or `users`). Creating tables without user foreign keys.');
+
+        return null;
     }
 
     public function down(Schema $schema): void
