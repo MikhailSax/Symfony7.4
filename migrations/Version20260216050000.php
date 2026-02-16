@@ -16,6 +16,9 @@ final class Version20260216050000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        $userTable = $this->resolveUserTable($schema);
+        $productTable = $this->resolveProductTable($schema);
+
         $orders = $schema->createTable('orders');
         $orders->addColumn('id', 'integer', ['autoincrement' => true]);
         $orders->addColumn('client_id', 'integer');
@@ -27,7 +30,9 @@ final class Version20260216050000 extends AbstractMigration
         $orders->addColumn('updated_at', 'datetime_immutable');
         $orders->setPrimaryKey(['id']);
         $orders->addIndex(['client_id'], 'IDX_ORDERS_CLIENT_ID');
-        $orders->addForeignKeyConstraint('user', ['client_id'], ['id'], ['onDelete' => 'CASCADE']);
+        if (null !== $userTable) {
+            $orders->addForeignKeyConstraint($userTable, ['client_id'], ['id'], ['onDelete' => 'CASCADE']);
+        }
 
         $orderItems = $schema->createTable('order_item');
         $orderItems->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -41,7 +46,9 @@ final class Version20260216050000 extends AbstractMigration
         $orderItems->addIndex(['order_id'], 'IDX_ORDER_ITEM_ORDER_ID');
         $orderItems->addIndex(['product_id'], 'IDX_ORDER_ITEM_PRODUCT_ID');
         $orderItems->addForeignKeyConstraint('orders', ['order_id'], ['id'], ['onDelete' => 'CASCADE']);
-        $orderItems->addForeignKeyConstraint('product', ['product_id'], ['id'], ['onDelete' => 'CASCADE']);
+        if (null !== $productTable) {
+            $orderItems->addForeignKeyConstraint($productTable, ['product_id'], ['id'], ['onDelete' => 'CASCADE']);
+        }
 
         $pricingRules = $schema->createTable('pricing_rule');
         $pricingRules->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -55,7 +62,9 @@ final class Version20260216050000 extends AbstractMigration
         $pricingRules->addColumn('updated_at', 'datetime_immutable');
         $pricingRules->setPrimaryKey(['id']);
         $pricingRules->addIndex(['product_id'], 'IDX_PRICING_RULE_PRODUCT_ID');
-        $pricingRules->addForeignKeyConstraint('product', ['product_id'], ['id'], ['onDelete' => 'CASCADE']);
+        if (null !== $productTable) {
+            $pricingRules->addForeignKeyConstraint($productTable, ['product_id'], ['id'], ['onDelete' => 'CASCADE']);
+        }
 
         $productAttribute = $schema->createTable('product_attribute');
         $productAttribute->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -65,7 +74,9 @@ final class Version20260216050000 extends AbstractMigration
         $productAttribute->addColumn('required', 'boolean');
         $productAttribute->setPrimaryKey(['id']);
         $productAttribute->addIndex(['product_id'], 'IDX_PRODUCT_ATTRIBUTE_PRODUCT_ID');
-        $productAttribute->addForeignKeyConstraint('product', ['product_id'], ['id'], ['onDelete' => 'CASCADE']);
+        if (null !== $productTable) {
+            $productAttribute->addForeignKeyConstraint($productTable, ['product_id'], ['id'], ['onDelete' => 'CASCADE']);
+        }
 
         $productAttributeValue = $schema->createTable('product_attribute_value');
         $productAttributeValue->addColumn('id', 'integer', ['autoincrement' => true]);
@@ -90,7 +101,36 @@ final class Version20260216050000 extends AbstractMigration
         $fileAsset->addIndex(['order_id'], 'IDX_FILE_ASSET_ORDER_ID');
         $fileAsset->addIndex(['uploaded_by_id'], 'IDX_FILE_ASSET_UPLOADED_BY_ID');
         $fileAsset->addForeignKeyConstraint('orders', ['order_id'], ['id'], ['onDelete' => 'SET NULL']);
-        $fileAsset->addForeignKeyConstraint('user', ['uploaded_by_id'], ['id'], ['onDelete' => 'SET NULL']);
+        if (null !== $userTable) {
+            $fileAsset->addForeignKeyConstraint($userTable, ['uploaded_by_id'], ['id'], ['onDelete' => 'SET NULL']);
+        }
+    }
+
+    private function resolveUserTable(Schema $schema): ?string
+    {
+        foreach (['user', 'app_user', 'users'] as $tableName) {
+            if ($schema->hasTable($tableName)) {
+                return $tableName;
+            }
+        }
+
+        $this->write('No user table found (`user`, `app_user`, or `users`). Creating tables without user foreign keys.');
+
+        return null;
+    }
+
+
+    private function resolveProductTable(Schema $schema): ?string
+    {
+        foreach (['product', 'products'] as $tableName) {
+            if ($schema->hasTable($tableName)) {
+                return $tableName;
+            }
+        }
+
+        $this->write('No product table found (`product` or `products`). Creating tables without product foreign keys.');
+
+        return null;
     }
 
     public function down(Schema $schema): void
