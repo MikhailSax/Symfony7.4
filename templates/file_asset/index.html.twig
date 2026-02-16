@@ -1,0 +1,30 @@
+{% extends 'admin.html.twig' %}
+{% block title %}Файлы макетов{% endblock %}
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Файлы макетов</h1>
+        <a class="btn btn-primary" href="{{ path('admin_file_asset_new') }}">Добавить файл</a>
+    </div>
+    <table class="table table-striped">
+        <thead><tr><th>Имя</th><th>Путь</th><th>Размер</th><th>Статус проверки</th><th></th></tr></thead>
+        <tbody>
+        {% for file in files %}
+            <tr>
+                <td>{{ file.originalName }}</td>
+                <td>{{ file.path }}</td>
+                <td>{{ file.size }} bytes</td>
+                <td>{{ file.checkStatus }}{% if file.checkMessage %} — {{ file.checkMessage }}{% endif %}</td>
+                <td class="text-end d-flex gap-1 justify-content-end">
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ path('admin_file_asset_edit', {id: file.id}) }}">Изм.</a>
+                    <form method="post" action="{{ path('admin_file_asset_delete', {id: file.id}) }}" onsubmit="return confirm('Удалить файл?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ file.id) }}">
+                        <button class="btn btn-sm btn-outline-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">Нет файлов.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

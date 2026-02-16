@@ -232,4 +232,9 @@ class Product
         $this->imagePromo = $imagePromo;
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return (string) ($this->title ?? 'Product');
+    }
 }

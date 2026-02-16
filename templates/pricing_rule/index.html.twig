@@ -1,0 +1,36 @@
+{% extends 'admin.html.twig' %}
+{% block title %}Правила ценообразования{% endblock %}
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Правила ценообразования</h1>
+        <a class="btn btn-primary" href="{{ path('admin_pricing_rule_new') }}">Добавить правило</a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    <table class="table table-striped">
+        <thead><tr><th>Название</th><th>Продукт</th><th>Формула</th><th>Приоритет</th><th></th></tr></thead>
+        <tbody>
+        {% for rule in rules %}
+            <tr>
+                <td>{{ rule.name }}</td>
+                <td>{{ rule.product.title }}</td>
+                <td><code>{{ rule.formula }}</code></td>
+                <td>{{ rule.priority }}</td>
+                <td class="text-end d-flex gap-1 justify-content-end">
+                    <form method="post" action="{{ path('admin_pricing_rule_test', {id: rule.id}) }}"><button class="btn btn-sm btn-outline-success">Тест</button></form>
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ path('admin_pricing_rule_edit', {id: rule.id}) }}">Изм.</a>
+                    <form method="post" action="{{ path('admin_pricing_rule_delete', {id: rule.id}) }}" onsubmit="return confirm('Удалить правило?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rule.id) }}">
+                        <button class="btn btn-sm btn-outline-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">Правил пока нет.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
