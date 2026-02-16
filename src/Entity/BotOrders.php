@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BotOrdersRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class BotOrders
 {
     #[ORM\Id]
@@ -14,23 +15,49 @@ class BotOrders
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $user_id = null;
+    #[ORM\Column]
+    private ?int $userId = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $username = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $userFirstName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $userLastName = null;
 
     #[ORM\Column(length: 255)]
     private ?string $category = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $task = null;
 
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
+    #[ORM\Column(length: 50)]
+    private string $status = 'new';
+
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $now = new \DateTimeImmutable();
+        $this->createdAt = $now;
+        $this->updatedAt = $now;
+    }
+
+    #[ORM\PreUpdate]
+    public function onUpdate(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -39,12 +66,12 @@ class BotOrders
 
     public function getUserId(): ?int
     {
-        return $this->user_id;
+        return $this->userId;
     }
 
-    public function setUserId(int $user_id): static
+    public function setUserId(int $userId): static
     {
-        $this->user_id = $user_id;
+        $this->userId = $userId;
 
         return $this;
     }
@@ -54,9 +81,33 @@ class BotOrders
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(?string $username): static
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getUserFirstName(): ?string
+    {
+        return $this->userFirstName;
+    }
+
+    public function setUserFirstName(?string $userFirstName): static
+    {
+        $this->userFirstName = $userFirstName;
+
+        return $this;
+    }
+
+    public function getUserLastName(): ?string
+    {
+        return $this->userLastName;
+    }
+
+    public function setUserLastName(?string $userLastName): static
+    {
+        $this->userLastName = $userLastName;
 
         return $this;
     }
@@ -78,7 +129,7 @@ class BotOrders
         return $this->task;
     }
 
-    public function setTask(?string $task): static
+    public function setTask(string $task): static
     {
         $this->task = $task;
 
@@ -97,15 +148,25 @@ class BotOrders
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getStatus(): string
     {
-        return $this->created_at;
+        return $this->status;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setStatus(string $status): static
     {
-        $this->created_at = $created_at;
+        $this->status = $status;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 }

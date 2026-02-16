@@ -55,13 +55,13 @@ class Category
     /**
      * @var Collection<int, Image>
      */
-    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'category_id')]
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'category')]
     private Collection $article;
 
     /**
      * @var Collection<int, Product>
      */
-    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category_id')]
+    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category')]
     private Collection $products;
 
     #[ORM\Column(nullable: true)]
@@ -205,7 +205,7 @@ class Category
     {
         if (!$this->article->contains($article)) {
             $this->article->add($article);
-            $article->setCategoryId($this);
+            $article->setCategory($this);
         }
 
         return $this;
@@ -215,8 +215,8 @@ class Category
     {
         if ($this->article->removeElement($article)) {
             // set the owning side to null (unless already changed)
-            if ($article->getCategoryId() === $this) {
-                $article->setCategoryId(null);
+            if ($article->getCategory() === $this) {
+                $article->setCategory(null);
             }
         }
 
@@ -235,7 +235,7 @@ class Category
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
-            $product->setCategoryId($this);
+            $product->setCategory($this);
         }
 
         return $this;
@@ -245,8 +245,8 @@ class Category
     {
         if ($this->products->removeElement($product)) {
             // set the owning side to null (unless already changed)
-            if ($product->getCategoryId() === $this) {
-                $product->setCategoryId(null);
+            if ($product->getCategory() === $this) {
+                $product->setCategory(null);
             }
         }
 

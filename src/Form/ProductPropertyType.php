@@ -15,22 +15,19 @@ class ProductPropertyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('value')
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('updated_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('product_id', EntityType::class, [
+            ->add('product', EntityType::class, [
                 'class' => Product::class,
-                'choice_label' => 'id',
+                'choice_label' => 'title',
+                'label' => 'Продукт',
             ])
-            ->add('property_id', EntityType::class, [
+            ->add('property', EntityType::class, [
                 'class' => Properties::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
+                'label' => 'Характеристика',
             ])
-        ;
+            ->add('value', null, [
+                'label' => 'Значение',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

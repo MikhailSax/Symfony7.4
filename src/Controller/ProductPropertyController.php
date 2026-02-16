@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('admin/product/property',name: 'product_property_')]
+#[Route('admin/product/property', name: 'product_property_')]
 final class ProductPropertyController extends AbstractController
 {
-    #[Route(name: 'index', methods: ['GET'])]
+    #[Route('', name: 'index', methods: ['GET'])]
     public function index(ProductPropertyRepository $productPropertyRepository): Response
     {
         return $this->render('product_property/index.html.twig', [
@@ -33,7 +33,7 @@ final class ProductPropertyController extends AbstractController
             $entityManager->persist($productProperty);
             $entityManager->flush();
 
-            return $this->redirectToRoute('index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('product_property_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('product_property/new.html.twig', [
@@ -59,10 +59,10 @@ final class ProductPropertyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_property_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('product_property_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('product_property/create.html.twig', [
+        return $this->render('product_property/edit.html.twig', [
             'product_property' => $productProperty,
             'form' => $form,
         ]);
@@ -71,11 +71,11 @@ final class ProductPropertyController extends AbstractController
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, ProductProperty $productProperty, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$productProperty->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $productProperty->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($productProperty);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_product_property_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('product_property_index', [], Response::HTTP_SEE_OTHER);
     }
 }
